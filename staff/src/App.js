@@ -26,7 +26,6 @@ import Attendance from './admin_components/Attendance';
 import Aleavestatus from './admin_components/A_leavestatus';
 import Leavestatus from './Staff_components/Leavestatus';
 import Leavehystory from './Staff_components/Leavehystory';
-import Staffloggeed from './admin_components/Staffloggeed';
 import Aholidays from './admin_components/A_holidays';
 import Staffholidays from './Staff_components/Staffholidays';
 
@@ -60,7 +59,6 @@ function App() {
         <Route path="/Attendance" element={<Attendance />} />
         <Route path="/Leavestatus" element={<Leavestatus />} />
         <Route path="/Leavehystory" element={<Leavehystory />} />
-        <Route path="/Staffloggeed" element={<Staffloggeed />} />
         <Route path="/A_holidays" element={<Aholidays />} />
         <Route path="/Staffholidays" element={<Staffholidays />} />
       </Routes>
