@@ -20,7 +20,7 @@ import Aservice from './admin_components/A_service';
 import Service from './Staff_components/Service';
 import Emppass from './Staff_components/Emppass';
 import Profile from './Staff_components/Profile';
-import Leave_request from './Staff_components/Leave_request';
+import LeaveRequest from './Staff_components/LeaveRequest';
 import Aleaveapplications from './admin_components/A_leaveapplications';
 import Attendance from './admin_components/Attendance';
 import Aleavestatus from './admin_components/A_leavestatus';
@@ -53,7 +53,7 @@ function App() {
         <Route path="/Service" element={<Service />} />
         <Route path="/Emppass" element={<Emppass />} />
         <Route path="/Profile" element={<Profile />} />
-        <Route path="/Leave_request" element={<Leave_request />} />
+<Route path="/Leave_request" element={<LeaveRequest />} />
         <Route path="/A_leaveapplications" element={<Aleaveapplications />} />
         <Route path="/A_leavestatus" element={<Aleavestatus />} />
         <Route path="/Attendance" element={<Attendance />} />
