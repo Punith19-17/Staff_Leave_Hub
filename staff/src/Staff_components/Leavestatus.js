@@ -1,21 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback
+} from 'react';
+
 import axios from 'axios';
 import './Leavestatus.css';
 import { useNavigate } from 'react-router-dom';
 
 const LeaveHub = ({ employeeId }) => {
   const navigate = useNavigate();
+
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
   const [itemsPerPage] = useState(10);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigate('/dashboard');
-  };
+  }, [navigate]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchLeaves = async () => {
       try {
@@ -29,7 +36,10 @@ const LeaveHub = ({ employeeId }) => {
         if (response.data.success) {
           setLeaves(response.data.data);
         } else {
-          setError(response.data.message || 'Failed to fetch leave data');
+          setError(
+            response.data.message ||
+              'Failed to fetch leave data'
+          );
         }
       } catch (err) {
         setError(
@@ -37,7 +47,10 @@ const LeaveHub = ({ employeeId }) => {
             'Failed to fetch leave data. Please try again later.'
         );
 
-        console.error('Error fetching leaves:', err);
+        console.error(
+          'Error fetching leaves:',
+          err
+        );
 
         if (err.response?.status === 401) {
           handleBack();
@@ -48,7 +61,7 @@ const LeaveHub = ({ employeeId }) => {
     };
 
     fetchLeaves();
-  }, [employeeId]);
+  }, [employeeId, handleBack]);
 
   const getStatusColor = (status) => {
     const statusColors = {
@@ -57,12 +70,18 @@ const LeaveHub = ({ employeeId }) => {
       rejected: '#F44336'
     };
 
-    return statusColors[status.toLowerCase()] || '#9E9E9E';
+    return (
+      statusColors[status.toLowerCase()] ||
+      '#9E9E9E'
+    );
   };
 
   // Pagination logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const indexOfLastItem =
+    currentPage * itemsPerPage;
+
+  const indexOfFirstItem =
+    indexOfLastItem - itemsPerPage;
 
   const currentLeaves = leaves.slice(
     indexOfFirstItem,
@@ -80,10 +99,9 @@ const LeaveHub = ({ employeeId }) => {
       day: 'numeric'
     };
 
-    return new Date(dateString).toLocaleDateString(
-      undefined,
-      options
-    );
+    return new Date(
+      dateString
+    ).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -111,7 +129,9 @@ const LeaveHub = ({ employeeId }) => {
             <p>No leave records found</p>
 
             <button
-              onClick={() => window.location.reload()}
+              onClick={() =>
+                window.location.reload()
+              }
               className="refresh-btn"
             >
               Refresh
@@ -140,21 +160,39 @@ const LeaveHub = ({ employeeId }) => {
                 <tbody>
                   {currentLeaves.map((leave) => (
                     <tr key={leave.id}>
-                      <td>{leave.employee_id}</td>
+                      <td>
+                        {leave.employee_id}
+                      </td>
+
                       <td>{leave.name}</td>
-                      <td>{leave.department}</td>
-                      <td>{leave.designation}</td>
-                      <td>{leave.leave_type}</td>
 
                       <td>
-                        {formatDate(leave.start_date)}
+                        {leave.department}
                       </td>
 
                       <td>
-                        {formatDate(leave.end_date)}
+                        {leave.designation}
                       </td>
 
-                      <td>{leave.duration}</td>
+                      <td>
+                        {leave.leave_type}
+                      </td>
+
+                      <td>
+                        {formatDate(
+                          leave.start_date
+                        )}
+                      </td>
+
+                      <td>
+                        {formatDate(
+                          leave.end_date
+                        )}
+                      </td>
+
+                      <td>
+                        {leave.duration}
+                      </td>
 
                       <td className="reason-cell">
                         {leave.reason}
@@ -208,16 +246,22 @@ const LeaveHub = ({ employeeId }) => {
                 </button>
 
                 <span>
-                  Page {currentPage} of {totalPages}
+                  Page {currentPage} of{' '}
+                  {totalPages}
                 </span>
 
                 <button
                   onClick={() =>
                     setCurrentPage((prev) =>
-                      Math.min(prev + 1, totalPages)
+                      Math.min(
+                        prev + 1,
+                        totalPages
+                      )
                     )
                   }
-                  disabled={currentPage === totalPages}
+                  disabled={
+                    currentPage === totalPages
+                  }
                 >
                   Next
                 </button>

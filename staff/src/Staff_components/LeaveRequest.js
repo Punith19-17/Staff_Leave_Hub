@@ -15,8 +15,7 @@ const LeaveRequest = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: files ? files[0] : value
     }));
@@ -24,26 +23,22 @@ const LeaveRequest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     try {
       const formDataToSend = new FormData();
-
       for (const key in formData) {
         formDataToSend.append(key, formData[key]);
       }
 
-      const response = await fetch(
-        "http://localhost:5000/api/leave-request",
-        {
-          method: "POST",
-          body: formDataToSend,
-          credentials: "include"
-        }
-      );
+      const response = await fetch('http://localhost:5000/api/leave-request', {
+        method: 'POST',
+        body: formDataToSend,
+        credentials: 'include'
+      });
 
       if (response.ok) {
-        alert("Leave request submitted successfully!");
-
+        alert('Leave request submitted successfully!');
+        // Reset form
         setFormData({
           employee_id: "",
           name: "",
@@ -57,47 +52,33 @@ const LeaveRequest = () => {
         });
       } else {
         const errorData = await response.json();
-
-        alert(
-          `Error: ${
-            errorData.message ||
-            "Failed to submit leave request"
-          }`
-        );
+        alert(`Error: ${errorData.message || 'Failed to submit leave request'}`);
       }
     } catch (error) {
-      console.error(
-        "Error submitting leave request:",
-        error
-      );
-
-      alert(
-        "An error occurred while submitting the leave request"
-      );
+      console.error('Error submitting leave request:', error);
+      alert('An error occurred while submitting the leave request');
     }
   };
 
-  // Styles
+  // Your existing styles remain the same
   const pageStyle = {
     margin: "0",
     padding: "0",
     fontFamily: "Arial, sans-serif",
-    background:
-      "linear-gradient(135deg, #E4EfE9, #93A5CF)",
-    minHeight: "100vh",
+    background: "linear-gradient(135deg, #E4EfE9, #93A5CF)",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    position: "relative"
+    position: "relative",
   };
 
   const headerStyle = {
     fontSize: "35px",
     fontWeight: "bold",
     color: "black",
-    background:
-      "linear-gradient(135deg, #8e9eab, rgb(168, 178, 178))",
+    background: "linear-gradient(135deg, #8e9eab, rgb(168, 178, 178))",
     width: "100%",
     textAlign: "center",
     padding: "15px 20px",
@@ -106,7 +87,7 @@ const LeaveRequest = () => {
     left: "0",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   };
 
   const backButtonStyle = {
@@ -118,29 +99,28 @@ const LeaveRequest = () => {
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
-    fontSize: "14px"
+    fontSize: "14px",
   };
 
   const cardStyle = {
-    background:
-      "linear-gradient(135deg, #E8F5C8, #9FA5D5)",
+    background: "linear-gradient(135deg, #E8F5C8, #9FA5D5)",
     padding: "30px",
     borderRadius: "15px",
     boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
     width: "750px",
     textAlign: "left",
-    marginTop: "50px"
+    marginTop: "50px",
   };
 
   const inputGroupStyle = {
     display: "flex",
     flexDirection: "column",
-    marginBottom: "15px"
+    marginBottom: "15px",
   };
 
   const labelStyle = {
     fontWeight: "bold",
-    marginBottom: "5px"
+    marginBottom: "5px",
   };
 
   const inputStyle = {
@@ -148,90 +128,64 @@ const LeaveRequest = () => {
     padding: "10px",
     borderRadius: "5px",
     fontSize: "16px",
-    border: "1px solid #ccc"
+    border: "1px solid #ccc",
   };
 
   const buttonStyle = {
     width: "100%",
     padding: "12px",
     border: "none",
-    background:
-      "linear-gradient(to right, #0083B0, #00B4DB)",
+    background: "linear-gradient(to right, #0083B0, #00B4DB)",
     color: "white",
     fontSize: "18px",
     borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
   };
 
   return (
     <div style={pageStyle}>
       <div style={headerStyle}>
         Staff Leave Hub
-
-        <button
-          style={backButtonStyle}
-          onClick={() => window.history.back()}
-        >
-          Back
-        </button>
+        <button style={backButtonStyle} onClick={() => window.history.back()}>Back</button>
       </div>
-
+      
       <div style={cardStyle}>
         <form onSubmit={handleSubmit}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "15px"
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Employee ID:
-              </label>
-
-              <input
-                type="text"
+              <label style={labelStyle}>Employee ID:</label>
+              <input 
+                type="text" 
                 name="employee_id"
-                placeholder="Enter your employee ID"
-                style={inputStyle}
+                placeholder="Enter your employee ID" 
+                style={inputStyle} 
                 value={formData.employee_id}
                 onChange={handleChange}
-                required
+                required 
               />
             </div>
-
             <div style={inputGroupStyle}>
               <label style={labelStyle}>Name:</label>
-
-              <input
-                type="text"
+              <input 
+                type="text" 
                 name="name"
-                placeholder="Enter your name"
-                style={inputStyle}
+                placeholder="Enter your name" 
+                style={inputStyle} 
                 value={formData.name}
                 onChange={handleChange}
-                required
+                required 
               />
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Department:
-              </label>
-
-              <select
+              <label style={labelStyle}>Department:</label>
+              <select 
                 name="department"
                 style={inputStyle}
                 value={formData.department}
                 onChange={handleChange}
-                required
               >
-                <option value="">
-                  Select Department
-                </option>
-
+                <option value="">Select Department</option>
                 <option value="Mca">Mca</option>
                 <option value="Mba">Mba</option>
                 <option value="MA">Ma</option>
@@ -242,123 +196,78 @@ const LeaveRequest = () => {
                 <option value="Ba">Ba</option>
               </select>
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Designation:
-              </label>
-
-              <input
-                type="text"
+              <label style={labelStyle}>Designation:</label>
+              <input 
+                type="text" 
                 name="designation"
-                placeholder="Enter your designation"
-                style={inputStyle}
+                placeholder="Enter your designation" 
+                style={inputStyle} 
                 value={formData.designation}
                 onChange={handleChange}
-                required
+                required 
               />
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Leave Type:
-              </label>
-
-              <select
+              <label style={labelStyle}>Leave Type:</label>
+              <select 
                 name="leave_type"
                 style={inputStyle}
                 value={formData.leave_type}
                 onChange={handleChange}
-                required
               >
-                <option value="">
-                  Select Leave Type
-                </option>
-
-                <option value="Sick Leave">
-                  Sick Leave
-                </option>
-
-                <option value="Casual Leave">
-                  Casual Leave
-                </option>
-
-                <option value="Annual Leave">
-                  Annual Leave
-                </option>
+                <option value="">Select Leave Type</option>
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Casual Leave">Casual Leave</option>
+                <option value="Annual Leave">Annual Leave</option>
               </select>
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Start Date:
-              </label>
-
-              <input
-                type="date"
+              <label style={labelStyle}>Start Date:</label>
+              <input 
+                type="date" 
                 name="start_date"
-                style={inputStyle}
+                style={inputStyle} 
                 value={formData.start_date}
                 onChange={handleChange}
-                required
+                required 
               />
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                End Date:
-              </label>
-
-              <input
-                type="date"
+              <label style={labelStyle}>End Date:</label>
+              <input 
+                type="date" 
                 name="end_date"
-                style={inputStyle}
+                style={inputStyle} 
                 value={formData.end_date}
                 onChange={handleChange}
-                required
+                required 
               />
             </div>
-
             <div style={inputGroupStyle}>
-              <label style={labelStyle}>
-                Upload Leave Letter:
-              </label>
-
-              <input
-                type="file"
+              <label style={labelStyle}>Upload Leave Letter:</label>
+              <input 
+                type="file" 
                 name="leave_letter"
-                style={inputStyle}
+                style={inputStyle} 
                 onChange={handleChange}
                 accept=".pdf,.doc,.docx"
               />
             </div>
           </div>
-
           <div style={inputGroupStyle}>
-            <label style={labelStyle}>
-              Reason:
-            </label>
-
-            <textarea
+            <label style={labelStyle}>Reason (400 words max):</label>
+            <textarea 
               name="reason"
-              placeholder="Enter your reason"
-              style={{
-                ...inputStyle,
-                height: "100px"
-              }}
-              maxLength="2400"
+              placeholder="Enter your reason" 
+              style={{ ...inputStyle, height: "100px" }} 
+              maxLength="2400" 
               value={formData.reason}
               onChange={handleChange}
-              required
+              required 
             />
           </div>
-
-          <button
-            type="submit"
-            style={buttonStyle}
-          >
-            Submit Request
-          </button>
+          <button type="submit" style={buttonStyle}>Submit Request</button>
         </form>
       </div>
     </div>
