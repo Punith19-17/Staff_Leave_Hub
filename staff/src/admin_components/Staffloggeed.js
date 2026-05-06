@@ -149,8 +149,7 @@ const LoggedStaff = () => {
             </thead>
             <tbody>
               {loggedEmployees.map((employee) => (
-                <tr key={employee.id} style={{ ':hover': trHoverStyle }}>
-                  <td style={tdStyle}>{employee.id}</td>
+<tr key={employee.id}>                  <td style={tdStyle}>{employee.id}</td>
                   <td style={tdStyle}>{employee.employee_id}</td>
                   <td style={tdStyle}>{new Date(employee.login_date).toLocaleDateString()}</td>
                   <td style={tdStyle}>{employee.login_time}</td>
