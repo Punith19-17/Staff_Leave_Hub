@@ -39,8 +39,7 @@ const LeaveHub = ({ employeeId }) => {
     };
 
     fetchLeaves();
-  }, [employeeId]);
-
+}, [employeeId, handleBack]);
   const getStatusColor = (status) => {
     const statusColors = {
       approved: '#4CAF50',

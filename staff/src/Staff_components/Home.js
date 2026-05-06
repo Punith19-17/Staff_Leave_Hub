@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Home.css';
 
 const StaffLeaveHub = () => {
@@ -19,7 +18,7 @@ const StaffLeaveHub = () => {
       {/* Navbar */}
       <nav className="navbar-container">
         <div className="navbar">
-          <a href="#" className="active" onClick={setActive}>Home</a>
+<a href="/" className="active" onClick={setActive}>Home</a>
           <a href="/Login" onClick={setActive}>Staff Login</a>
           <a href="/A_Login" onClick={setActive}>Admin Login</a>
           <a href="/Aboutus" onClick={setActive}>About Us</a>

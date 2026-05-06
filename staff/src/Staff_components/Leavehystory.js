@@ -39,7 +39,7 @@ const LeaveHub = ({ employeeId }) => {
     };
 
     fetchLeaves();
-  }, [employeeId]);
+}, [employeeId, handleBack]);
 
   const getStatusColor = (status) => {
     const statusColors = {
