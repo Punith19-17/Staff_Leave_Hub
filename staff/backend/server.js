@@ -138,8 +138,10 @@ app.post("/login", (req, res) => {
     }
 
     // If login is successful, send a redirect URL in the response
-    res.status(200).json({ message: "Login successful", redirect: "/dashboard" });
-  });
+res.status(200).json({ 
+  message: "Login successful", 
+  redirect: "/A_Dashboard" 
+});  });
 });
 
 
