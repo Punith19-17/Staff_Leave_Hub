@@ -3,67 +3,91 @@ const mysql = require("mysql");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const session = require('express-session');
+const session = require("express-session");
+const fs = require("fs");
 
 const app = express();
+
+// Middleware
 app.use(express.json());
+
 app.use(cors({
-origin: [
+  origin: [
     "http://localhost:3000",
     "https://staff-leave-hub-jlpw.vercel.app"
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-
-app.use((req, res, next) => {
-  console.log('Session ID:', req.sessionID);
-  console.log('Session data:', req.session);
-  next();
-});
 
 // Session middleware
 app.use(session({
-  secret: 'your_secret_key',
+  secret: "your_secret_key",
   resave: false,
   saveUninitialized: false,
-  cookie: { 
-    secure: false, // Set to true if using HTTPS
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  cookie: {
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
+// Session debug logs
+app.use((req, res, next) => {
+  console.log("Session ID:", req.sessionID);
+  console.log("Session data:", req.session);
+  next();
+});
+
+// Create uploads folder automatically if not exists
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
 
 // Serve static files from uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
 // File upload configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Save files in the "uploads" folder
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
+
 const upload = multer({ storage });
 
-// Create MySQL connection
+// Railway MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "", // Set your MySQL password if needed
-  database: "staff",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
+// Connect database
 db.connect((err) => {
   if (err) {
     console.error("Database connection failed:", err);
     return;
   }
-  console.log("Connected to MySQL database.");
+
+  console.log("Connected to Railway MySQL database.");
+});
+
+// Test route
+app.get("/", (req, res) => {
+  res.send("Backend running successfully");
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 // Utility function for promise-based queries
