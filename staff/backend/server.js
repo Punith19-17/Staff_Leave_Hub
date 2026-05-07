@@ -87,6 +87,37 @@ app.get("/", (req, res) => {
 });
 
 
+//For Emolyee id 
+
+app.get("/api/check-employee-id/:employee_id", async (req, res) => {
+  try {
+    const { employee_id } = req.params;
+
+    const [rows] = await db.query(
+      "SELECT * FROM personal_information WHERE employee_id = ?",
+      [employee_id]
+    );
+
+    if (rows.length > 0) {
+      return res.json({
+        exists: true
+      });
+    }
+
+    return res.json({
+      exists: false
+    });
+
+  } catch (error) {
+    console.error("CHECK EMPLOYEE ID ERROR:", error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
+});
+
 
 // Utility function for promise-based queries
 async function queryAsync(sql, params = []) {
