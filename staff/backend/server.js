@@ -204,53 +204,9 @@ app.get("/api/departments", (req, res) => {
 
 
 // Api to insert data into personal_information for user 
-app.post("/api/personal-information", upload.single("profile_picture"), (req, res) => {
-  const {
-    employee_id,
-    employee_type,
-    name,
-    email_id,
-    gender,
-    dob,
-    mobile_no,
-    permanent_address,
-    adhar_number,
-    department,
-    designation,
-    doj, // Add this line
-  } = req.body;
-
-  // Update validation to include doj
-  if (
-    !employee_id ||
-    !employee_type ||
-    !name ||
-    !email_id ||
-    !gender ||
-    !dob ||
-    !mobile_no ||
-    !permanent_address ||
-    !adhar_number ||
-    !department ||
-    !designation ||
-    !doj // Add this line
-  ) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
-  const profile_picture = req.file ? req.file.path : null;
-
-  // Update query to include doj
-  const query = `
-    INSERT INTO personal_information (
-      employee_id, employee_type, name, email_id, gender, dob, mobile_no,
-      permanent_address, adhar_number, department, designation, doj, profile_picture
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(
-    query,
-    [
+app.post("/api/personal-information", upload.single("profile_picture"), async (req, res) => {
+  try {
+    const {
       employee_id,
       employee_type,
       name,
@@ -262,17 +218,76 @@ app.post("/api/personal-information", upload.single("profile_picture"), (req, re
       adhar_number,
       department,
       designation,
-      doj, // Add this line
-      profile_picture,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Error inserting data:", err);
-        return res.status(500).json({ message: "Failed to insert data", error: err.message });
-      }
-      res.status(201).json({ message: "Data inserted successfully" });
+      doj,
+    } = req.body;
+
+    if (
+      !employee_id ||
+      !employee_type ||
+      !name ||
+      !email_id ||
+      !gender ||
+      !dob ||
+      !mobile_no ||
+      !permanent_address ||
+      !adhar_number ||
+      !department ||
+      !designation ||
+      !doj
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
-  );
+
+    const profile_picture = req.file ? req.file.path : null;
+
+    const query = `
+      INSERT INTO personal_information (
+        employee_id,
+        employee_type,
+        name,
+        email_id,
+        gender,
+        dob,
+        mobile_no,
+        permanent_address,
+        adhar_number,
+        department,
+        designation,
+        doj,
+        profile_picture
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    await db.query(query, [
+      employee_id,
+      employee_type,
+      name,
+      email_id,
+      gender,
+      dob,
+      mobile_no,
+      permanent_address,
+      adhar_number,
+      department,
+      designation,
+      doj,
+      profile_picture,
+    ]);
+
+    return res.status(201).json({
+      message: "Data inserted successfully",
+    });
+
+  } catch (error) {
+    console.error("PERSONAL INFO API ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to insert data",
+      error: error.message,
+    });
+  }
 });
 
 
