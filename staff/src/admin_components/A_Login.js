@@ -10,30 +10,44 @@ const A_Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-  
-    try {
-      const response = await axios.post("https://staffleavehub-production.up.railway.app/login", {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post(
+      "https://staffleavehub-production.up.railway.app/login",
+      {
         email_id: email,
         password: password,
-      });
-  
-      console.log("Server Response:", response.data);
-
-      if (response.data.message === "Login successful") {
-        alert("User logged in successfully");
-        setEmail("");
-        setPassword("");
-        console.log("Navigating to /A_Dashboard");
-        navigate("/A_Dashboard");
-      } else {
-        setMessage(response.data.message || "Invalid credentials.");
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      setMessage(error.response?.data?.message || "Login failed.");
+    );
+
+    console.log("FULL RESPONSE:", response);
+    console.log("RESPONSE DATA:", response.data);
+
+    if (response.status === 200) {
+      alert("Login successful");
+
+      setMessage("Login successful");
+
+      // Navigate using backend response
+      navigate(response.data.redirect);
+
+    } else {
+      setMessage("Invalid credentials");
     }
-  };
+
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+
+    if (error.response) {
+      console.log("ERROR RESPONSE:", error.response.data);
+
+      setMessage(error.response.data.message);
+    } else {
+      setMessage("Server error");
+    }
+  }
+};
 
   useEffect(() => {
     console.log("Email:", email);
