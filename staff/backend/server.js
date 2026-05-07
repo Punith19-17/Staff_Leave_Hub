@@ -1,5 +1,5 @@
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
@@ -60,46 +60,39 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Railway MySQL connection
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
-});
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+}).promise();
 
 // Connect database
-db.connect((err) => {
-  if (err) {
+db.getConnection()
+  .then((connection) => {
+    console.log("Connected to Railway MySQL database.");
+    connection.release();
+  })
+  .catch((err) => {
     console.error("Database connection failed:", err);
-    return;
-  }
-
-  console.log("Connected to Railway MySQL database.");
-});
+  });
 
 // Test route
 app.get("/", (req, res) => {
   res.send("Backend running successfully");
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 // Utility function for promise-based queries
-function queryAsync(sql, params) {
-  return new Promise((resolve, reject) => {
-    db.query(sql, params, (err, results) => {
-      if (err) return reject(err);
-      resolve(results);
-    });
-  });
+async function queryAsync(sql, params = []) {
+  const [results] = await db.query(sql, params);
+  return results;
 }
-
 // Handle Signup Form Submission
 app.post("/signup", (req, res) => {
   const { username, email, password } = req.body;
@@ -758,7 +751,7 @@ try {
     ORDER BY a.department, p.name
   `;
 
-  const [results] = await db.promise().query(sql, [date]);
+  const [results] = await db.query(sql, [date]);
   
   res.status(200).json({
     success: true,
@@ -824,8 +817,7 @@ for (const record of records) {
   }
 }
 
-const connection = await db.promise().getConnection();
-
+const connection = await db.getConnection();
 try {
   await connection.beginTransaction();
 
@@ -933,8 +925,7 @@ try {
 
   sql += " ORDER BY a.date, a.department, p.name";
 
-  const [results] = await db.promise().query(sql, params);
-  
+const [results] = await db.query(sql, params);  
   res.status(200).json({
     success: true,
     data: results,
@@ -997,8 +988,7 @@ try {
 
   sql += " ORDER BY a.date DESC LIMIT 90"; // Last 90 days by default
 
-  const [results] = await db.promise().query(sql, params);
-  
+const [results] = await db.query(sql, params);  
   res.status(200).json({
     success: true,
     data: results,
@@ -1053,7 +1043,7 @@ try {
 
   sql += " GROUP BY status";
 
-  const [results] = await db.promise().query(sql, params);
+  const [results] = await db().query(sql, params);
   
   // Convert to more usable format
   const stats = {
@@ -1650,6 +1640,8 @@ app.get('/api/holidays', async (req, res) => {
 });
 
 // Start server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
