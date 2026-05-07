@@ -19,7 +19,7 @@ function EmployeeForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/employee", {
+      const response = await fetch("https://staffleavehub-production.up.railway.app/api/employee", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

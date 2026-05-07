@@ -9,7 +9,7 @@ const StaffLeaveHub = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/profile', {
+        const response = await fetch('https://staffleavehub-production.up.railway.app/api/profile', {
           credentials: 'include',
         });
 
@@ -51,7 +51,7 @@ const StaffLeaveHub = () => {
 
   const formattedDOB = userData.dob ? new Date(userData.dob).toDateString() : '';
   const profileImageUrl = userData.profile_picture
-    ? `http://localhost:5000/${userData.profile_picture}`
+    ? `https://staffleavehub-production.up.railway.app/${userData.profile_picture}`
     : 'https://via.placeholder.com/150';
 
   return (

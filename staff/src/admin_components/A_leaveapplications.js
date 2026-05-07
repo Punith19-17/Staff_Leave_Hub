@@ -16,7 +16,7 @@ const LeaveApplications = () => {
       try {
         setLoading(true);
         
-        const response = await fetch("http://localhost:5000/api/leave-requests", {
+        const response = await fetch("https://staffleavehub-production.up.railway.app/api/leave-requests", {
           headers: {
             'Accept': 'application/json'
           }
@@ -71,7 +71,7 @@ const LeaveApplications = () => {
 
   const handleStatusUpdate = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/leave-requests/${selectedLeave.id}`, {
+      const response = await fetch(`https://staffleavehub-production.up.railway.app/api/leave-requests/${selectedLeave.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const LeaveApplications = () => {
     if (letterPath.startsWith('http://') || letterPath.startsWith('https://')) {
       return letterPath;
     }
-    return `http://localhost:5000/${letterPath.replace(/^\//, '')}`;
+    return `https://staffleavehub-production.up.railway.app/${letterPath.replace(/^\//, '')}`;
   };
 
   return (

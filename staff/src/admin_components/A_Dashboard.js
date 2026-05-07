@@ -14,7 +14,7 @@ const ADashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/Adashboard");
+        const response = await axios.get("https://staffleavehub-production.up.railway.app/api/Adashboard");
         
         // The backend doesn't send a 'success' property, so we check for data directly
         if (response.data) {

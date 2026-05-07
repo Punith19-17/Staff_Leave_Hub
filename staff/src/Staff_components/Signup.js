@@ -36,7 +36,7 @@ function TeachingStaff() {
     // Check if employee_id already exists
     try {
       const checkResponse = await axios.get(
-        `http://localhost:5000/api/check-employee-id/${formData.employee_id}`
+        `https://staffleavehub-production.up.railway.app/api/check-employee-id/${formData.employee_id}`
       );
       if (checkResponse.data.exists) {
         setMessage("Employee ID already exists. Please use a different ID.");
@@ -53,7 +53,7 @@ function TeachingStaff() {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/api/personal-information", data, {
+      const response = await axios.post("https://staffleavehub-production.up.railway.app/api/personal-information", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage(response.data.message);

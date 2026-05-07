@@ -27,7 +27,7 @@ const LeaveHub = ({ employeeId }) => {
     const fetchLeaves = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/employee/leaves',
+          'https://staffleavehub-production.up.railway.app/api/employee/leaves',
           {
             withCredentials: true
           }
@@ -215,7 +215,7 @@ const LeaveHub = ({ employeeId }) => {
                       <td>
                         {leave.leave_letter ? (
                           <a
-                            href={`http://localhost:5000/uploads/${leave.leave_letter}`}
+                            href={`https://staffleavehub-production.up.railway.app/uploads/${leave.leave_letter}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="view-letter"

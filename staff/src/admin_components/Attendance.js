@@ -6,7 +6,7 @@ import './Attendance.css';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: 'https://staffleavehub-production.up.railway.app',
   timeout: 10000
 });
 

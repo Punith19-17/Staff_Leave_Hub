@@ -30,7 +30,7 @@ const LeaveRequest = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-      const response = await fetch('http://localhost:5000/api/leave-request', {
+      const response = await fetch('https://staffleavehub-production.up.railway.app/api/leave-request', {
         method: 'POST',
         body: formDataToSend,
         credentials: 'include'
