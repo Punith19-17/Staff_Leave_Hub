@@ -113,35 +113,49 @@ app.post("/signup", (req, res) => {
 });
 
 // Handle Admin Login
-app.post("/login", (req, res) => {
-  const { email_id, password } = req.body;
+app.post("/login", async (req, res) => {
+  try {
+    const { email_id, password } = req.body;
 
-  // Basic input validation
-  if (!email_id || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
-  const sql = "SELECT * FROM a_signup WHERE email_id = ?";
-  db.query(sql, [email_id], (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Database error", error: err.message });
+    if (!email_id || !password) {
+      return res.status(400).json({
+        message: "Email and password are required"
+      });
     }
 
+    const sql = "SELECT * FROM a_signup WHERE email_id = ?";
+
+    const [result] = await db.query(sql, [email_id]);
+
+    console.log("DATABASE RESULT:", result);
+
     if (result.length === 0) {
-      return res.status(404).json({ message: "User does not exist" });
+      return res.status(404).json({
+        message: "User does not exist"
+      });
     }
 
     const user = result[0];
+
     if (user.password !== password) {
-      return res.status(401).json({ message: "Incorrect password" });
+      return res.status(401).json({
+        message: "Incorrect password"
+      });
     }
 
-    // If login is successful, send a redirect URL in the response
-res.status(200).json({ 
-  message: "Login successful", 
-  redirect: "/A_Dashboard" 
-});  });
+    return res.status(200).json({
+      message: "Login successful",
+      redirect: "/A_Dashboard"
+    });
+
+  } catch (error) {
+    console.error("LOGIN API ERROR:", error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+  }
 });
 
 
