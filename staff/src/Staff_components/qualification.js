@@ -32,26 +32,7 @@ function TeachingStaff() {
     navigate("/Service");
   };
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'qualification_documents') {
-      const file = files[0];
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Only PDF, DOC, and DOCX files are allowed.');
-        return;
-      }
-      if (file.size > 50 * 1024 * 1024) {
-        alert('File size must be less than 50MB.');
-        return;
-      }
-      setFormData({ ...formData, [name]: file });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   console.log("Submitting form...");
@@ -78,14 +59,22 @@ function TeachingStaff() {
 
     console.log("Response status:", response.status);
 
-    const data = await response.json();
+    // IMPORTANT FIX
+    const text = await response.text();
 
-    console.log("Backend response:", data);
+    console.log("Raw response:", text);
+
+    let data = {};
+
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      console.log("JSON parse error");
+    }
 
     if (response.ok) {
-      alert("Data submitted successfully ✅");
+      alert(data.message || "Data submitted successfully ✅");
 
-      // Reset form
       setFormData({
         employee_id: "",
         qualification: "",
@@ -94,7 +83,6 @@ function TeachingStaff() {
         qualification_documents: null,
       });
 
-      // Clear file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
