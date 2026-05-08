@@ -32,68 +32,45 @@ function TeachingStaff() {
     navigate("/Service");
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+const handleChange = (e) => {
+  const { name, value, files } = e.target;
 
-  console.log("Submitting form...");
+  // File handling
+  if (name === "qualification_documents") {
+    const file = files[0];
 
-  const formDataToSend = new FormData();
+    if (!file) return;
 
-  formDataToSend.append("employee_id", formData.employee_id);
-  formDataToSend.append("qualification", formData.qualification);
-  formDataToSend.append("specialization", formData.specialization);
-  formDataToSend.append("year_of_pass", formData.year_of_pass);
-  formDataToSend.append(
-    "qualification_documents",
-    formData.qualification_documents
-  );
+    // Allowed file types
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
 
-  try {
-    const response = await fetch(
-      "https://staffleavehub-production.up.railway.app/submit-qualification",
-      {
-        method: "POST",
-        body: formDataToSend,
-      }
-    );
-
-    console.log("Response status:", response.status);
-
-    // IMPORTANT FIX
-    const text = await response.text();
-
-    console.log("Raw response:", text);
-
-    let data = {};
-
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      console.log("JSON parse error");
+    // Validate file type
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only PDF, DOC, and DOCX files are allowed.");
+      return;
     }
 
-    if (response.ok) {
-      alert(data.message || "Data submitted successfully ✅");
-
-      setFormData({
-        employee_id: "",
-        qualification: "",
-        specialization: "",
-        year_of_pass: "",
-        qualification_documents: null,
-      });
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
-    } else {
-      alert(data.message || "Failed to submit data");
+    // Validate file size (50MB max)
+    if (file.size > 50 * 1024 * 1024) {
+      alert("File size must be less than 50MB.");
+      return;
     }
 
-  } catch (error) {
-    console.error("Submit error:", error);
-    alert("Server error occurred");
+    setFormData({
+      ...formData,
+      [name]: file,
+    });
+
+  } else {
+    // Normal input handling
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   }
 };
 
