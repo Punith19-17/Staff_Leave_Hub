@@ -12,11 +12,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://staff-leave-hub-jlpw.vercel.app"
-  ],
-  credentials: true,
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
