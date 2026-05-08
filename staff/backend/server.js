@@ -16,7 +16,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 // Session middleware
 app.use(session({
   secret: "your_secret_key",
