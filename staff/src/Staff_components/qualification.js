@@ -52,46 +52,62 @@ function TeachingStaff() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Log form data before sending
-    console.log("Form data:", {
-      employee_id: formData.employee_id,
-      qualification: formData.qualification,
-      specialization: formData.specialization,
-      year_of_pass: formData.year_of_pass,
-      hasFile: !!formData.qualification_documents
-    });
+  console.log("Submitting form...");
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('employee_id', formData.employee_id);
-    formDataToSend.append('qualification', formData.qualification);
-    formDataToSend.append('specialization', formData.specialization);
-    formDataToSend.append('year_of_pass', formData.year_of_pass);
-    formDataToSend.append('qualification_documents', formData.qualification_documents);
+  const formDataToSend = new FormData();
 
-    try {
-      const response = await fetch('https://staffleavehub-production.up.railway.app/submit-qualification', {
-        method: 'POST',
+  formDataToSend.append("employee_id", formData.employee_id);
+  formDataToSend.append("qualification", formData.qualification);
+  formDataToSend.append("specialization", formData.specialization);
+  formDataToSend.append("year_of_pass", formData.year_of_pass);
+  formDataToSend.append(
+    "qualification_documents",
+    formData.qualification_documents
+  );
+
+  try {
+    const response = await fetch(
+      "https://staffleavehub-production.up.railway.app/submit-qualification",
+      {
+        method: "POST",
         body: formDataToSend,
+      }
+    );
+
+    console.log("Response status:", response.status);
+
+    const data = await response.json();
+
+    console.log("Backend response:", data);
+
+    if (response.ok) {
+      alert("Data submitted successfully ✅");
+
+      // Reset form
+      setFormData({
+        employee_id: "",
+        qualification: "",
+        specialization: "",
+        year_of_pass: "",
+        qualification_documents: null,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Server error response:", errorData);
-        throw new Error(errorData.message || 'Failed to submit data');
+      // Clear file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
       }
 
-      const result = await response.json();
-      console.log("Success response:", result);
-      alert('Data submitted successfully');
-      // Reset form...
-      
-    } catch (error) {
-      console.error("Full error:", error);
-      alert(`Error: ${error.message}`);
+    } else {
+      alert(data.message || "Failed to submit data");
     }
-  };
+
+  } catch (error) {
+    console.error("Submit error:", error);
+    alert("Server error occurred");
+  }
+};
 
   return (
     <>
