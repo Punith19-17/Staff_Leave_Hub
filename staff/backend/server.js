@@ -290,75 +290,98 @@ app.post("/api/personal-information", upload.single("profile_picture"), async (r
   }
 });
 
-
 // API to insert data into qualification_details table with file upload
 
 app.post("/submit-qualification", upload.single("qualification_documents"), (req, res) => {
+
   console.log("Received qualification submission:", {
     body: req.body,
     file: req.file
   });
 
-  // Check if file was uploaded
+  // Check if file uploaded
   if (!req.file) {
-    console.log("No file uploaded");
-    return res.status(400).json({ 
-      message: "Qualification document is required",
-      received: req.body
+    return res.status(400).json({
+      message: "Qualification document is required"
     });
   }
 
-  // Get fields from req.body
-  const { qualification, specialization, year_of_pass } = req.body;
+  // Get form fields
+  const {
+    employee_id,
+    qualification,
+    specialization,
+    year_of_pass
+  } = req.body;
 
-  // Enhanced validation with detailed error messages
+  // Validation
   const missingFields = [];
+
+  if (!employee_id) missingFields.push("employee_id");
   if (!qualification) missingFields.push("qualification");
   if (!specialization) missingFields.push("specialization");
   if (!year_of_pass) missingFields.push("year_of_pass");
 
   if (missingFields.length > 0) {
-    console.log("Missing fields:", missingFields);
-    return res.status(400).json({ 
-      message: `Missing required fields: ${missingFields.join(', ')}`,
-      received: req.body
+    return res.status(400).json({
+      message: `Missing required fields: ${missingFields.join(", ")}`
     });
   }
 
-  // Validate year format (4 digits)
+  // Validate year format
   if (!/^\d{4}$/.test(year_of_pass)) {
-    return res.status(400).json({ 
-      message: "Year of passing must be a 4-digit year",
-      received: year_of_pass 
+    return res.status(400).json({
+      message: "Year of passing must be a 4-digit year"
     });
   }
 
+  // File path
   const qualification_documents = req.file.path;
 
+  // SQL Query
   const query = `
-    INSERT INTO qualification_details (qualification, specialization, year_of_pass, qualification_documents)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO qualification_details
+    (
+      employee_id,
+      qualification,
+      specialization,
+      year_of_pass,
+      qualification_documents
+    )
+    VALUES (?, ?, ?, ?, ?)
   `;
 
+  // Insert data
   db.query(
     query,
-    [qualification, specialization, year_of_pass, qualification_documents],
+    [
+      employee_id,
+      qualification,
+      specialization,
+      year_of_pass,
+      qualification_documents
+    ],
     (err, result) => {
+
       if (err) {
         console.error("Error inserting qualification data:", err);
-        return res.status(500).json({ 
-          message: "Failed to insert data", 
+
+        return res.status(500).json({
+          message: "Failed to insert qualification data",
           error: err.message,
-          sqlError: err.sqlMessage 
+          sqlError: err.sqlMessage
         });
       }
-      res.status(201).json({ 
-        message: "Data inserted successfully",
-        documentPath: qualification_documents,
-        insertedId: result.insertId
+
+      return res.status(201).json({
+        message: "Qualification data inserted successfully",
+        insertedId: result.insertId,
+        documentPath: qualification_documents
       });
+
     }
   );
+
 });
 
 // Add a new department
