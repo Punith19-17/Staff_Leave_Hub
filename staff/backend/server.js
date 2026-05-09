@@ -31,19 +31,24 @@ app.use((req, res, next) => {
 });
 
 // Session middleware
-// Session middleware
 app.use(session({
   secret: "your_secret_key",
   resave: false,
-saveUninitialized: true,
-  cookie: {
-  secure: true,
-sameSite: "lax",
-secure: true,
-  maxAge: 24 * 60 * 60 * 1000
-}
-}));
+  saveUninitialized: false,
 
+  cookie: {
+    secure: true,
+    sameSite: "none",
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+app.get("/api/test-session", (req, res) => {
+  res.json({
+    session: req.session,
+    userId: req.session.userId
+  });
+});
 // Session debug logs
 app.use((req, res, next) => {
   console.log("Session ID:", req.sessionID);
