@@ -287,97 +287,109 @@ app.post("/api/personal-information", upload.single("profile_picture"), async (r
 
 // API to insert data into qualification_details table with file upload
 
-app.post("/submit-qualification", upload.single("qualification_documents"), (req, res) => {
+app.post(
+  "/submit-qualification",
+  upload.single("qualification_documents"),
+  async (req, res) => {
 
-  console.log("Received qualification submission:", {
-    body: req.body,
-    file: req.file
-  });
+    try {
 
-  // Check if file uploaded
-  if (!req.file) {
-    return res.status(400).json({
-      message: "Qualification document is required"
-    });
-  }
+      console.log("Received qualification submission:", {
+        body: req.body,
+        file: req.file
+      });
 
-  // Get form fields
-  const {
-    employee_id,
-    qualification,
-    specialization,
-    year_of_pass
-  } = req.body;
-
-  // Validation
-  const missingFields = [];
-
-  if (!employee_id) missingFields.push("employee_id");
-  if (!qualification) missingFields.push("qualification");
-  if (!specialization) missingFields.push("specialization");
-  if (!year_of_pass) missingFields.push("year_of_pass");
-
-  if (missingFields.length > 0) {
-    return res.status(400).json({
-      message: `Missing required fields: ${missingFields.join(", ")}`
-    });
-  }
-
-  // Validate year format
-  if (!/^\d{4}$/.test(year_of_pass)) {
-    return res.status(400).json({
-      message: "Year of passing must be a 4-digit year"
-    });
-  }
-
-  // File path
-  const qualification_documents = req.file.path;
-
-  // SQL Query
-  const query = `
-    INSERT INTO qualification_details
-    (
-      employee_id,
-      qualification,
-      specialization,
-      year_of_pass,
-      qualification_documents
-    )
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
-  // Insert data
-  db.query(
-    query,
-    [
-      employee_id,
-      qualification,
-      specialization,
-      year_of_pass,
-      qualification_documents
-    ],
-    (err, result) => {
-
-      if (err) {
-        console.error("Error inserting qualification data:", err);
-
-        return res.status(500).json({
-          message: "Failed to insert qualification data",
-          error: err.message,
-          sqlError: err.sqlMessage
+      // Check if file uploaded
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Qualification document is required"
         });
       }
 
-      return res.status(201).json({
+      // Get form fields
+      const {
+        employee_id,
+        qualification,
+        specialization,
+        year_of_pass
+      } = req.body;
+
+      // Validation
+      const missingFields = [];
+
+      if (!employee_id) missingFields.push("employee_id");
+      if (!qualification) missingFields.push("qualification");
+      if (!specialization) missingFields.push("specialization");
+      if (!year_of_pass) missingFields.push("year_of_pass");
+
+      // Missing field check
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Missing required fields: ${missingFields.join(", ")}`
+        });
+      }
+
+      // Validate year format
+      if (!/^\d{4}$/.test(year_of_pass)) {
+        return res.status(400).json({
+          success: false,
+          message: "Year of passing must be a 4-digit year"
+        });
+      }
+
+      // File path
+      const qualification_documents = req.file.path;
+
+      // SQL Query
+      const query = `
+        INSERT INTO qualification_details
+        (
+          employee_id,
+          qualification,
+          specialization,
+          year_of_pass,
+          qualification_documents
+        )
+        VALUES (?, ?, ?, ?, ?)
+      `;
+
+      // MYSQL2/PROMISE QUERY
+      const [result] = await db.query(
+        query,
+        [
+          employee_id,
+          qualification,
+          specialization,
+          year_of_pass,
+          qualification_documents
+        ]
+      );
+
+      console.log("Qualification inserted successfully:", result);
+
+      // SUCCESS RESPONSE
+      return res.status(200).json({
+        success: true,
         message: "Qualification data inserted successfully",
         insertedId: result.insertId,
         documentPath: qualification_documents
       });
 
-    }
-  );
+    } catch (error) {
 
-});
+      console.error("Qualification API Error:", error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to insert qualification data",
+        error: error.message
+      });
+
+    }
+  }
+);
 
 // Add a new department
 app.post("/api/departments", (req, res) => {
