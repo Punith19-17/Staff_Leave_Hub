@@ -9,23 +9,26 @@ import './Leavestatus.css';
 import { useNavigate } from 'react-router-dom';
 
 const LeaveHub = ({ employeeId }) => {
+
   const navigate = useNavigate();
 
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] =
-    useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [itemsPerPage] = useState(10);
+  const itemsPerPage = 10;
 
   const handleBack = useCallback(() => {
     navigate('/dashboard');
   }, [navigate]);
 
   useEffect(() => {
+
     const fetchLeaves = async () => {
+
       try {
+
         const response = await axios.get(
           'https://staffleavehub-production.up.railway.app/api/employee/leaves',
           {
@@ -33,52 +36,60 @@ const LeaveHub = ({ employeeId }) => {
           }
         );
 
+        console.log("LEAVE RESPONSE:", response.data);
+
         if (response.data.success) {
+
           setLeaves(response.data.data);
+
         } else {
+
           setError(
             response.data.message ||
-              'Failed to fetch leave data'
+            'Failed to fetch leave data'
           );
+
         }
+
       } catch (err) {
+
+        console.error('Error fetching leaves:', err);
+
         setError(
           err.response?.data?.message ||
-            'Failed to fetch leave data. Please try again later.'
-        );
-
-        console.error(
-          'Error fetching leaves:',
-          err
+          'Failed to fetch leave data. Please try again later.'
         );
 
         if (err.response?.status === 401) {
-          handleBack();
+          navigate('/login');
         }
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
     fetchLeaves();
-  }, [employeeId, handleBack]);
+
+  }, [employeeId, navigate]);
 
   const getStatusColor = (status) => {
+
     const statusColors = {
-      approved: '#4CAF50',
-      pending: '#FFC107',
-      rejected: '#F44336'
+      Approved: '#4CAF50',
+      Pending: '#FFC107',
+      Rejected: '#F44336'
     };
 
-    return (
-      statusColors[status.toLowerCase()] ||
-      '#9E9E9E'
-    );
+    return statusColors[status] || '#9E9E9E';
+
   };
 
-  // Pagination logic
-  const indexOfLastItem =
-    currentPage * itemsPerPage;
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
 
   const indexOfFirstItem =
     indexOfLastItem - itemsPerPage;
@@ -93,55 +104,74 @@ const LeaveHub = ({ employeeId }) => {
   );
 
   const formatDate = (dateString) => {
+
+    if (!dateString) return 'N/A';
+
     const options = {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     };
 
-    return new Date(
-      dateString
-    ).toLocaleDateString(undefined, options);
+    return new Date(dateString)
+      .toLocaleDateString(undefined, options);
+
   };
 
   return (
+
     <div className="leave-hub-wrapper">
+
       <header className="leave-hub-header">
+
         <h1>Staff Leave Hub</h1>
 
         <button
           className="back-button"
           onClick={handleBack}
         >
-          &larr; Back
+          ← Back
         </button>
+
       </header>
 
       <div className="leave-hub-content">
+
         {loading ? (
+
           <div className="loading-spinner"></div>
+
         ) : error ? (
+
           <div className="error-message">
             {error}
           </div>
+
         ) : leaves.length === 0 ? (
+
           <div className="no-leaves">
+
             <p>No leave records found</p>
 
             <button
-              onClick={() =>
-                window.location.reload()
-              }
+              onClick={() => window.location.reload()}
               className="refresh-btn"
             >
               Refresh
             </button>
+
           </div>
+
         ) : (
+
           <>
+
             <div className="leaves-table-container">
+
               <table className="leaves-table">
+
                 <thead>
+
                   <tr>
                     <th>Employee ID</th>
                     <th>Name</th>
@@ -155,85 +185,88 @@ const LeaveHub = ({ employeeId }) => {
                     <th>Status</th>
                     <th>Leave Letter</th>
                   </tr>
+
                 </thead>
 
                 <tbody>
+
                   {currentLeaves.map((leave) => (
+
                     <tr key={leave.id}>
-                      <td>
-                        {leave.employee_id}
-                      </td>
+
+                      <td>{leave.employee_id}</td>
 
                       <td>{leave.name}</td>
 
+                      <td>{leave.department}</td>
+
+                      <td>{leave.designation}</td>
+
+                      <td>{leave.leave_type}</td>
+
                       <td>
-                        {leave.department}
+                        {formatDate(leave.start_date)}
                       </td>
 
                       <td>
-                        {leave.designation}
+                        {formatDate(leave.end_date)}
                       </td>
 
-                      <td>
-                        {leave.leave_type}
-                      </td>
-
-                      <td>
-                        {formatDate(
-                          leave.start_date
-                        )}
-                      </td>
-
-                      <td>
-                        {formatDate(
-                          leave.end_date
-                        )}
-                      </td>
-
-                      <td>
-                        {leave.duration}
-                      </td>
+                      <td>{leave.duration}</td>
 
                       <td className="reason-cell">
                         {leave.reason}
                       </td>
 
                       <td>
+
                         <span
                           className="status-badge"
                           style={{
                             backgroundColor:
-                              getStatusColor(
-                                leave.status
-                              )
+                              getStatusColor(leave.status)
                           }}
                         >
                           {leave.status}
                         </span>
+
                       </td>
 
                       <td>
+
                         {leave.leave_letter ? (
+
                           <a
-                            href={`https://staffleavehub-production.up.railway.app/uploads/${leave.leave_letter}`}
+                            href={`https://staffleavehub-production.up.railway.app/${leave.leave_letter}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="view-letter"
                           >
                             View
                           </a>
+
                         ) : (
+
                           'N/A'
+
                         )}
+
                       </td>
+
                     </tr>
+
                   ))}
+
                 </tbody>
+
               </table>
+
             </div>
 
             {totalPages > 1 && (
+
               <div className="pagination-controls">
+
                 <button
                   onClick={() =>
                     setCurrentPage((prev) =>
@@ -246,32 +279,34 @@ const LeaveHub = ({ employeeId }) => {
                 </button>
 
                 <span>
-                  Page {currentPage} of{' '}
-                  {totalPages}
+                  Page {currentPage} of {totalPages}
                 </span>
 
                 <button
                   onClick={() =>
                     setCurrentPage((prev) =>
-                      Math.min(
-                        prev + 1,
-                        totalPages
-                      )
+                      Math.min(prev + 1, totalPages)
                     )
                   }
-                  disabled={
-                    currentPage === totalPages
-                  }
+                  disabled={currentPage === totalPages}
                 >
                   Next
                 </button>
+
               </div>
+
             )}
+
           </>
+
         )}
+
       </div>
+
     </div>
+
   );
+
 };
 
 export default LeaveHub;
