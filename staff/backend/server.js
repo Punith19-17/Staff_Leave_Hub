@@ -36,9 +36,11 @@ app.use(session({
 
   resave: false,
 
-  saveUninitialized: false,
+  saveUninitialized: true,
 
   proxy: true,
+
+  name: "staffleavehub.sid",
 
   cookie: {
     secure: true,
