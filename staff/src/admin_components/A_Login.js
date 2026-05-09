@@ -16,12 +16,15 @@ const A_Login = () => {
 
     try {
       const response = await axios.post(
-        "https://staffleavehub-production.up.railway.app/login",
-        {
-          email_id: email,
-          password: password,
-        }
-      );
+  "https://staffleavehub-production.up.railway.app/login",
+  {
+    email_id: email,
+    password: password,
+  },
+  {
+    withCredentials: true
+  }
+);
 
       if (response.status === 200) {
         setMessage("Login successful");
