@@ -29,7 +29,7 @@ const LeaveRequest = () => {
         });
       } else {
         const errorData = await response.json();
-        alert(`Error: \${errorData.message || 'Failed to submit leave request'}`);
+        alert(`Error: ${errorData.message || 'Failed to submit leave request'}`);
       }
     } catch (error) {
       alert('An error occurred while submitting the leave request');
