@@ -43,12 +43,7 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
-app.get("/api/test-session", (req, res) => {
-  res.json({
-    session: req.session,
-    userId: req.session.userId
-  });
-});
+
 // Session debug logs
 app.use((req, res, next) => {
   console.log("Session ID:", req.sessionID);
@@ -884,78 +879,83 @@ app.post("/api/leave-request", upload.single("leave_letter"), async (req, res) =
 });
 
 // Add this new API endpoint to your backend
-app.get("/api/user-leave-data", (req, res) => {
-  // In a real application, you would get the logged-in user's ID from the session
- 
-  const userId = req.session.userId; // Or however you store the logged-in user's ID
-  
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+app.get("/api/user-leave-data", async (req, res) => {
 
-  // First, get the user's date of joining
-  const dojQuery = "SELECT doj FROM personal_information WHERE employee_id = ?";
-  
-  db.query(dojQuery, [userId], (err, dojResult) => {
-    if (err) {
-      console.error("Error fetching user's DOJ:", err);
-      return res.status(500).json({ message: "Error fetching user data" });
+  try {
+
+    console.log("SESSION USER:", req.session.userId);
+
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized"
+      });
     }
-    
+
+    // DOJ query
+    const [dojResult] = await db.query(
+      "SELECT doj, name FROM personal_information WHERE employee_id = ?",
+      [userId]
+    );
+
+    console.log("DOJ RESULT:", dojResult);
+
     if (dojResult.length === 0) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        message: "User not found"
+      });
     }
-    
+
     const dateOfJoining = new Date(dojResult[0].doj);
+    const username = dojResult[0].name || "User";
+
     const today = new Date();
-    
-    // Calculate months difference
-    const monthsDiff = (today.getFullYear() - dateOfJoining.getFullYear()) * 12 + 
-                      (today.getMonth() - dateOfJoining.getMonth());
-    
-    // Determine total leaves based on months of service
+
+    const monthsDiff =
+      (today.getFullYear() - dateOfJoining.getFullYear()) * 12 +
+      (today.getMonth() - dateOfJoining.getMonth());
+
     const totalLeaves = monthsDiff >= 6 ? 20 : 10;
-    
-    // Now get the leave counts for this user
-    const leaveCountQuery = `
-      SELECT 
+
+    // Leave count query
+    const [leaveResult] = await db.query(
+      `
+      SELECT
         COUNT(*) as leavesApplied,
         SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as leavesApproved
-      FROM leave_request 
+      FROM leave_request
       WHERE employee_id = ?
-    `;
-    
-    db.query(leaveCountQuery, [userId], (err, leaveResult) => {
-      if (err) {
-        console.error("Error fetching leave counts:", err);
-        return res.status(500).json({ message: "Error fetching leave data" });
-      }
-      
-      const leavesApplied = leaveResult[0].leavesApplied || 0;
-      const leavesApproved = leaveResult[0].leavesApproved || 0;
-      const leavesRemaining = totalLeaves - leavesApproved;
-      
-      // Get username (assuming you have this in your database)
-      const userQuery = "SELECT name FROM personal_information WHERE employee_id = ?";
-      
-      db.query(userQuery, [userId], (err, userResult) => {
-        if (err) {
-          console.error("Error fetching username:", err);
-          return res.status(500).json({ message: "Error fetching user data" });
-        }
-        
-        const username = userResult[0]?.name || "User";
-        
-        res.json({
-          username,
-          totalLeaves,
-          leavesApplied,
-          leavesApproved,
-          leavesRemaining
-        });
-      });
+      `,
+      [userId]
+    );
+
+    console.log("LEAVE RESULT:", leaveResult);
+
+    const leavesApplied = leaveResult[0].leavesApplied || 0;
+    const leavesApproved = leaveResult[0].leavesApproved || 0;
+
+    const leavesRemaining = totalLeaves - leavesApproved;
+
+    return res.json({
+      username,
+      totalLeaves,
+      leavesApplied,
+      leavesApproved,
+      leavesRemaining
     });
-  });
+
+  } catch (error) {
+
+    console.error("USER LEAVE DATA ERROR:", error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
 });
 
 
