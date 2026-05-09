@@ -35,11 +35,11 @@ app.use((req, res, next) => {
 app.use(session({
   secret: "your_secret_key",
   resave: false,
-  saveUninitialized: false,
+saveUninitialized: true,
   cookie: {
   secure: true,
-  sameSite: "none",
-  httpOnly: true,
+sameSite: "lax",
+secure: true,
   maxAge: 24 * 60 * 60 * 1000
 }
 }));
@@ -611,6 +611,8 @@ app.post('/api/login', async (req, res) => {
 
     // Save session
     req.session.userId = employee_id;
+
+    console.log("SESSION USER:", req.session.userId);
 
     // SAVE SESSION FIRST
     req.session.save((err) => {
