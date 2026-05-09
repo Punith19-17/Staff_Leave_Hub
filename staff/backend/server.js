@@ -164,7 +164,9 @@ app.post("/signup", (req, res) => {
 
 // Handle Admin Login
 app.post("/login", async (req, res) => {
+
   try {
+
     const { email_id, password } = req.body;
 
     if (!email_id || !password) {
@@ -176,8 +178,6 @@ app.post("/login", async (req, res) => {
     const sql = "SELECT * FROM a_signup WHERE email_id = ?";
 
     const [result] = await db.query(sql, [email_id]);
-
-    console.log("DATABASE RESULT:", result);
 
     if (result.length === 0) {
       return res.status(404).json({
@@ -193,19 +193,39 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      message: "Login successful",
-      redirect: "/A_Dashboard"
+    // SAVE SESSION
+    req.session.userId = user.id || user.email_id;
+
+    req.session.save((err) => {
+
+      if (err) {
+
+        console.error("SESSION SAVE ERROR:", err);
+
+        return res.status(500).json({
+          message: "Session save failed"
+        });
+
+      }
+
+      return res.status(200).json({
+        message: "Login successful",
+        redirect: "/A_Dashboard"
+      });
+
     });
 
   } catch (error) {
+
     console.error("LOGIN API ERROR:", error);
 
     return res.status(500).json({
       message: "Server error",
       error: error.message
     });
+
   }
+
 });
 
 
