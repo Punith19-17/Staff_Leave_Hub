@@ -21,126 +21,97 @@ function Signup() {
   return (
     <>
       <style>{`
-        {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        body, html {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #E4EfE9, #93A5CF);
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .header {
-          width: 100%;
-          text-align: center;
-          padding: 30px;
-          font-size: 40px;
-          font-weight: bold;
-          background: linear-gradient(135deg, #8e9eab,rgb(168, 178, 178));
-          color: #000;
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-
-        .signup-container {
-          background: linear-gradient(135deg, #E8F5C8, #9FA5D5);
-          padding: 50px;
-          border-radius: 20px;
-          box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
-          text-align: center;
-          width: 800px;
-          margin-top: 100px;
-        }
-
-        .signup-container h2 {
-          font-size: 30px;
-          margin-bottom: 25px;
-          color: #333;
-          font-weight: bold;
-        }
-
-        .input-field {
-          width: 80%;
-          padding: 18px;
-          margin-bottom: 20px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          font-size: 1rem;
-        }
-
-        .input-field:focus {
-          outline: none;
-          border: 1px solid transparent;
-          box-shadow: 0 0 8px rgba(60, 102, 129, 0.8), 0 0 8px rgba(255, 165, 0, 0.8), 0 0 8px rgba(0, 255, 0, 0.8), 0 0 8px rgba(0, 0, 255, 0.8), 0 0 8px rgba(75, 0, 130, 0.8), 0 0 8px rgba(238, 130, 238, 0.8);
-        }
-
-        .signup-button {
-          background: #4CA6D4;
-          color: white;
-          padding: 13px;
-          width: 30%;
-          border: none;
-          border-radius: 10px;
-          font-size: 26px;
-          font-weight: bold;
-          cursor: pointer;
-          margin-top: 15px;
-        }
-          .back-button {
-          background: #4CA6D4;
-          color: white;
-          padding: 13px;
-          width: 10%;
-          border: none;
-          border-radius: 10px;
-          font-size: 26px;
-          font-weight: bold;
-          cursor: pointer;
-          margin-top: 15px;
-
-        .signup-button:hover, .back-button:hover {
-          background: #66D3FA;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F9FAFB; }
+        .container { min-height: 100vh; background: #F9FAFB; display: flex; flex-direction: column; }
+        .navbar { height: 70px; background: #FFFFFF; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 10; }
+        .brand { font-size: 20px; font-weight: 800; color: #111827; display: flex; align-items: center; gap: 12px; }
+        .logo-icon { background: #4F46E5; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; }
+        .back-btn { background: #FFFFFF; color: #4B5563; border: 1px solid #D1D5DB; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .back-btn:hover { background: #F3F4F6; }
+        
+        .main-content { padding: 40px 60px; max-width: 550px; margin: 40px auto 0; width: 100%; } 
+        
+        .page-header { margin-bottom: 30px; text-align: center; }
+        .page-title { font-size: 32px; font-weight: 800; color: #111827; margin: 0 0 10px 0; }
+        .page-subtitle { font-size: 16px; color: #6B7280; margin: 0; }
+        
+        .form-card { background: #FFFFFF; padding: 40px; border-radius: 16px; border: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 20px; } 
+        
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-label { font-size: 14px; font-weight: 600; color: #4B5563; }
+        .form-input { padding: 12px 16px; border: 1px solid #D1D5DB; border-radius: 8px; outline: none; font-size: 15px; color: #111827; background: #FFFFFF; width: 100%; transition: border-color 0.2s ease; }
+        .form-input:focus { border-color: #4F46E5; }
+        
+        .btn-container { display: flex; justify-content: center; gap: 16px; margin-top: 30px; }
+        .primary-btn { background: #4F46E5; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; transition: all 0.2s ease; width: 100%; }
+        .primary-btn:hover { opacity: 0.9; transform: translateY(-1px); }
       `}</style>
 
-      <div className="header">Staff Leave Hub</div>
+      <div className="container">
+        <nav className="navbar">
+          <div className="brand">
+            <div className="logo-icon">A</div>
+            Staff Leave Hub
+          </div>
+          <button type="button" className="back-btn" onClick={() => window.history.back()}>
+            Back
+          </button>
+        </nav>
 
-      <div className="signup-container">
-        <h2>Sign Up</h2>
-        <input
-          type="text"
-          placeholder="User name"
-          className="input-field"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="input-field"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="input-field"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="signup-button" onClick={handleSubmit}>
-          Sign Up
-        </button>
-        <button className="back-button" onClick={() => window.history.back()}>
-          Back
-        </button>
+        <main className="main-content">
+          <div className="page-header">
+            <h1 className="page-title">Sign Up</h1>
+            <p className="page-subtitle">Create a new account to access the portal.</p>
+          </div>
+
+          <div className="form-card">
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="input-group">
+                  <label className="input-label">User name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter Username"
+                    className="form-input"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <label className="input-label">Email</label>
+                  <input
+                    type="email"
+                    placeholder="Enter Email"
+                    className="form-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <label className="input-label">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter Password"
+                    className="form-input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="btn-container">
+                <button type="submit" className="primary-btn">Sign Up</button>
+              </div>
+            </form>
+          </div>
+        </main>
       </div>
     </>
   );
