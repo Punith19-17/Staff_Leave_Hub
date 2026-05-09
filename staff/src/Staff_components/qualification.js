@@ -7,8 +7,7 @@ function TeachingStaff() {
 
   // ================= API URL =================
 
-  const API_URL = "https://YOUR-RAILWAY-BACKEND-URL.up.railway.app";
-
+const API_URL = "https://staffleavehub-production.up.railway.app";
   // ================= STATE =================
 
   const [formData, setFormData] = useState({
@@ -54,9 +53,17 @@ function TeachingStaff() {
 
       console.log("Response received:", response);
 
-      const result = await response.json();
+const text = await response.text();
 
-      console.log("Backend Result:", result);
+console.log("Raw Response:", text);
+
+let result = {};
+
+try {
+  result = JSON.parse(text);
+} catch (err) {
+  console.log("JSON Parse Error:", err);
+}
 
       if (response.ok) {
 
