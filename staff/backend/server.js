@@ -1558,7 +1558,6 @@ app.put('/api/leave-requests/:id', async (req, res) => {
 
     console.log("UPDATE REQUEST:", id, status);
 
-    // Validation
     if (!status) {
       return res.status(400).json({
         success: false,
@@ -1566,26 +1565,14 @@ app.put('/api/leave-requests/:id', async (req, res) => {
       });
     }
 
-    if (!['Pending', 'Approved', 'Rejected'].includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid status value"
-      });
-    }
-
-    // UPDATE QUERY
     const [updateResult] = await db.query(
       `
       UPDATE leave_request
-      SET
-        status = ?,
-        updated_at = NOW()
+      SET status = ?
       WHERE id = ?
       `,
       [status, id]
     );
-
-    console.log("UPDATE RESULT:", updateResult);
 
     if (updateResult.affectedRows === 0) {
       return res.status(404).json({
@@ -1594,7 +1581,6 @@ app.put('/api/leave-requests/:id', async (req, res) => {
       });
     }
 
-    // FETCH UPDATED RECORD
     const [updatedRows] = await db.query(
       `
       SELECT *
@@ -1612,7 +1598,7 @@ app.put('/api/leave-requests/:id', async (req, res) => {
 
   } catch (error) {
 
-    console.error("UPDATE LEAVE STATUS ERROR:", error);
+    console.error("UPDATE ERROR:", error);
 
     return res.status(500).json({
       success: false,
