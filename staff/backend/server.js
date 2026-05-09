@@ -32,14 +32,15 @@ app.use((req, res, next) => {
 
 // Session middleware
 app.use(session({
-  secret: "your_secret_key",
+  secret: process.env.SESSION_SECRET || "staffleavehubsecret",
 
   resave: false,
 
   saveUninitialized: false,
 
   proxy: true,
- cookie: {
+
+  cookie: {
     secure: true,
     sameSite: "none",
     httpOnly: true,
