@@ -2,7 +2,14 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 function TeachingStaff() {
+
   const navigate = useNavigate();
+
+  // ================= API URL =================
+
+  const API_URL = "https://YOUR-RAILWAY-BACKEND-URL.up.railway.app";
+
+  // ================= STATE =================
 
   const [formData, setFormData] = useState({
     employee_id: "",
@@ -17,9 +24,13 @@ function TeachingStaff() {
   // ================= HANDLE SUBMIT =================
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
+    console.log("Submitting form...");
+
     try {
+
       const data = new FormData();
 
       data.append("employee_id", formData.employee_id);
@@ -31,18 +42,25 @@ function TeachingStaff() {
         formData.qualification_documents
       );
 
+      console.log("Sending request to backend...");
+
       const response = await fetch(
-        "https://YOUR-RAILWAY-BACKEND-URL.up.railway.app/submit-qualification",
+        `${API_URL}/submit-qualification`,
         {
           method: "POST",
           body: data,
         }
       );
 
+      console.log("Response received:", response);
+
       const result = await response.json();
 
+      console.log("Backend Result:", result);
+
       if (response.ok) {
-        alert(result.message || "Qualification data inserted successfully");
+
+        alert("Qualification data inserted successfully");
 
         // Reset form
         setFormData({
@@ -57,18 +75,26 @@ function TeachingStaff() {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+
       } else {
+
         alert(result.message || "Failed to insert data");
+
       }
+
     } catch (error) {
+
       console.error("Submit Error:", error);
+
       alert("Server error occurred");
+
     }
   };
 
   // ================= HANDLE NEXT =================
 
   const handleNext = () => {
+
     const {
       employee_id,
       qualification,
@@ -84,12 +110,17 @@ function TeachingStaff() {
       !year_of_pass ||
       !qualification_documents
     ) {
+
       alert("Please fill in all fields before proceeding.");
+
       return;
     }
 
+    // Validate year
     if (!/^\d{4}$/.test(year_of_pass)) {
+
       alert("Year of passing must be a 4-digit year");
+
       return;
     }
 
@@ -99,14 +130,17 @@ function TeachingStaff() {
   // ================= HANDLE CHANGE =================
 
   const handleChange = (e) => {
+
     const { name, value, files } = e.target;
 
-    // File handling
+    // File Handling
     if (name === "qualification_documents") {
+
       const file = files[0];
 
       if (!file) return;
 
+      // Allowed file types
       const allowedTypes = [
         "application/pdf",
         "application/msword",
@@ -115,13 +149,17 @@ function TeachingStaff() {
 
       // Validate file type
       if (!allowedTypes.includes(file.type)) {
+
         alert("Only PDF, DOC, and DOCX files are allowed.");
+
         return;
       }
 
       // Validate file size
       if (file.size > 50 * 1024 * 1024) {
+
         alert("File size must be less than 50MB.");
+
         return;
       }
 
@@ -129,130 +167,137 @@ function TeachingStaff() {
         ...formData,
         [name]: file,
       });
+
     } else {
+
       setFormData({
         ...formData,
         [name]: value,
       });
+
     }
   };
 
   return (
     <>
       <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
+        *{
+          margin:0;
+          padding:0;
+          box-sizing:border-box;
         }
 
-        body, html {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
+        body,html{
+          font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+          background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
+          height:100vh;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:flex-start;
         }
 
-        .header {
-          width: 100%;
-          text-align: center;
-          padding: 15px;
-          font-size: 2.5rem;
-          font-weight: bold;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: black;
-          position: fixed;
-          top: 0;
-          left: 0;
+        .header{
+          width:100%;
+          text-align:center;
+          padding:15px;
+          font-size:2.5rem;
+          font-weight:bold;
+          background:linear-gradient(135deg,#667eea,#764ba2);
+          color:black;
+          position:fixed;
+          top:0;
+          left:0;
         }
 
-        .teaching-staff {
-          position: relative;
-          margin-top: 150px;
-          font-size: 2rem;
-          font-weight: bold;
-          color: #333;
-          align-self: center;
+        .teaching-staff{
+          position:relative;
+          margin-top:150px;
+          font-size:2rem;
+          font-weight:bold;
+          color:#333;
+          align-self:center;
         }
 
-        .form-container {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          margin-top: 20px;
-          width: 100%;
-          max-width: 1100px;
-          background: linear-gradient(135deg, #e0eafc, #cfdef3);
-          padding: 50px;
-          border-radius: 10px;
+        .form-container{
+          display:flex;
+          flex-direction:column;
+          gap:20px;
+          margin-top:20px;
+          width:100%;
+          max-width:1100px;
+          background:linear-gradient(135deg,#e0eafc,#cfdef3);
+          padding:50px;
+          border-radius:10px;
         }
 
-        .form-row {
-          display: flex;
-          gap: 40px;
+        .form-row{
+          display:flex;
+          gap:40px;
         }
 
-        .form-group {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          font-size: 1.3rem;
-          font-weight: bold;
-          color: white;
+        .form-group{
+          flex:1;
+          display:flex;
+          flex-direction:column;
+          align-items:flex-start;
+          font-size:1.3rem;
+          font-weight:bold;
+          color:white;
         }
 
         .form-group input,
-        .form-group select {
-          padding: 12px;
-          font-size: 1.2rem;
-          border-radius: 8px;
-          border: none;
-          width: 100%;
-          color: black;
+        .form-group select{
+          padding:12px;
+          font-size:1.2rem;
+          border-radius:8px;
+          border:none;
+          width:100%;
+          color:black;
         }
 
         .submit-button,
-        .next-button {
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-          padding: 12px 50px;
-          border: none;
-          border-radius: 10px;
-          font-size: 1.5rem;
-          font-weight: bold;
-          cursor: pointer;
-          align-self: center;
+        .next-button{
+          background:linear-gradient(135deg,#667eea,#764ba2);
+          color:white;
+          padding:12px 50px;
+          border:none;
+          border-radius:10px;
+          font-size:1.5rem;
+          font-weight:bold;
+          cursor:pointer;
+          align-self:center;
         }
 
         .submit-button:hover,
-        .next-button:hover {
-          background: #66D3FA;
+        .next-button:hover{
+          background:#66D3FA;
         }
 
-        .button-container {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-          margin-top: 40px;
+        .button-container{
+          display:flex;
+          justify-content:center;
+          gap:20px;
+          margin-top:40px;
         }
       `}</style>
 
-      <div className="header">Staff Leave Hub</div>
+      <div className="header">
+        Staff Leave Hub
+      </div>
 
       <div className="teaching-staff">
         Qualification Details
       </div>
 
       <div className="form-container">
+
         <form onSubmit={handleSubmit}>
 
           <div className="form-row">
 
             <div className="form-group">
+
               <label>Employee ID</label>
 
               <input
@@ -263,9 +308,11 @@ function TeachingStaff() {
                 value={formData.employee_id}
                 onChange={handleChange}
               />
+
             </div>
 
             <div className="form-group">
+
               <label>Qualification</label>
 
               <input
@@ -276,9 +323,11 @@ function TeachingStaff() {
                 value={formData.qualification}
                 onChange={handleChange}
               />
+
             </div>
 
             <div className="form-group">
+
               <label>Specialization</label>
 
               <input
@@ -289,6 +338,7 @@ function TeachingStaff() {
                 value={formData.specialization}
                 onChange={handleChange}
               />
+
             </div>
 
           </div>
@@ -296,6 +346,7 @@ function TeachingStaff() {
           <div className="form-row">
 
             <div className="form-group">
+
               <label>Year of Passing</label>
 
               <input
@@ -306,9 +357,11 @@ function TeachingStaff() {
                 value={formData.year_of_pass}
                 onChange={handleChange}
               />
+
             </div>
 
             <div className="form-group">
+
               <label>Qualification Documents</label>
 
               <input
@@ -319,6 +372,7 @@ function TeachingStaff() {
                 onChange={handleChange}
                 ref={fileInputRef}
               />
+
             </div>
 
           </div>
@@ -343,6 +397,7 @@ function TeachingStaff() {
           </div>
 
         </form>
+
       </div>
     </>
   );
