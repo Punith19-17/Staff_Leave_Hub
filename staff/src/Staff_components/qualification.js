@@ -109,11 +109,6 @@ function QualificationDetails() {
         .form-input { padding: 12px 16px; border: 1px solid #D1D5DB; border-radius: 8px; outline: none; font-size: 15px; color: #111827; background: #FFFFFF; width: 100%; transition: border-color 0.2s ease; }
         .form-input:focus { border-color: #4F46E5; }
         
-        .file-input { padding: 8px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; color: #4B5563; width: 100%; cursor: pointer; background: #FFFFFF; transition: border-color 0.2s ease; }
-        .file-input:hover { border-color: #4F46E5; }
-        .file-input::file-selector-button { padding: 6px 12px; margin-right: 12px; border: none; border-radius: 4px; background-color: #EEF2FF; color: #4F46E5; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
-        .file-input::file-selector-button:hover { background-color: #E0E7FF; }
-        
         .btn-container { display: flex; justify-content: center; gap: 16px; margin-top: 40px; }
         .primary-btn { background: #4F46E5; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; transition: all 0.2s ease; min-width: 140px; }
         .primary-btn:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -156,7 +151,16 @@ function QualificationDetails() {
                 </div>
                 <div className="input-group">
                   <label className="input-label">Qualification Documents</label>
-                  <input type="file" name="qualification_documents" accept=".pdf,.doc,.docx" required onChange={handleChange} ref={fileInputRef} className="file-input" />
+                  {/* Native input style applied */}
+                  <input 
+                    type="file" 
+                    name="qualification_documents" 
+                    accept=".pdf,.doc,.docx" 
+                    required 
+                    onChange={handleChange} 
+                    ref={fileInputRef} 
+                    style={{ marginTop: '10px', fontSize: '15px', cursor: 'pointer' }} 
+                  />
                 </div>
               </div>
 
