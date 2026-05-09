@@ -33,25 +33,37 @@ const ADashboard = () => {
     fetchDashboardData();
   }, []);
 
+  const stats = [
+    { title: "Total Employees", value: dashboardData.totalEmployees, bg: "#F4F4FF", color: "#4F46E5", border: "#E0E7FF" },
+    { title: "Requested Leaves", value: dashboardData.requestedLeaves, bg: "#FFFBEB", color: "#D97706", border: "#FEF3C7" },
+    { title: "Approved Leaves", value: dashboardData.approvedLeaves, bg: "#ECFDF5", color: "#059669", border: "#D1FAE5" },
+    { title: "Rejected Leaves", value: dashboardData.rejectedLeaves, bg: "#FEF2F2", color: "#DC2626", border: "#FEE2E2" }
+  ];
+
   return (
-    <div style={styles.body}>
-      {/* Horizontal Header & Navbar */}
-      <header style={styles.header}>
-        <div style={styles.headerTop}>
-          <h1 style={styles.mainHeading}>Staff Leave Hub</h1>
-          <button 
-            style={styles.backButton}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.color = '#1e293b'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = '#64748b'; }}
-            onClick={() => navigate("/A_Login")}
-          >
-            Logout / Back
-          </button>
+    <div style={styles.container}>
+      {/* Top Navbar */}
+      <nav style={styles.navbar}>
+        <div style={styles.brand}>
+          <div style={styles.logoIcon}>A</div>
+          Staff Leave Hub
         </div>
-        
-        {/* Top Navigation */}
-        <div style={styles.navbar}>
+        <button 
+          style={styles.logoutBtn} 
+          onClick={() => navigate("/A_Login")}
+          onMouseOver={(e) => e.currentTarget.style.background = '#E5E7EB'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#F3F4F6'}
+        >
+          Logout
+        </button>
+      </nav>
+
+      <div style={styles.layout}>
+        {/* Left Side: Navigation Menu */}
+        <aside style={styles.sidebar}>
+          <div style={styles.sidebarTitle}>Admin Menu</div>
           {[
+            { name: "Dashboard", path: "/A_Dashboard", active: true },
             { name: "Employees", path: "/EmployeeInfo" },
             { name: "Attendance", path: "/Attendance" },
             { name: "Leave Details", path: "/A_leaveapplications" },
@@ -59,214 +71,191 @@ const ADashboard = () => {
             { name: "Leave Status", path: "/A_leavestatus" },
             { name: "Logged Employees", path: "/Staffloggeed" }
           ].map((item) => (
-            <button
+            <div 
               key={item.name}
-              style={styles.navButton}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = styles.navButtonHover.background;
-                e.currentTarget.style.color = styles.navButtonHover.color;
-                e.currentTarget.style.borderColor = styles.navButtonHover.borderColor;
+              style={{
+                ...styles.navItem,
+                ...(item.active ? styles.navItemActive : {})
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#f8fafc';
-                e.currentTarget.style.color = '#475569';
-                e.currentTarget.style.borderColor = '#e2e8f0';
+              onMouseOver={(e) => {
+                if(!item.active) {
+                  e.currentTarget.style.background = '#F3F4F6';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }
+              }}
+              onMouseOut={(e) => {
+                if(!item.active) {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.transform = 'none';
+                }
               }}
               onClick={() => navigate(item.path)}
             >
               {item.name}
-            </button>
+            </div>
           ))}
-        </div>
-      </header>
+        </aside>
 
-      {/* Main Content */}
-      <div style={styles.mainContent}>
-        
-        {/* Welcome Pill */}
-        <div style={styles.welcomeBox}>
-          <img src="admin.jpg" alt="Admin" style={styles.profilePic} onError={(e) => e.target.src = 'https://via.placeholder.com/60'} />
-          <div>
-            <p style={styles.welcomeSub}>Administrator Panel</p>
-            <h2 style={styles.welcomeText}>Welcome back, Admin</h2>
+        {/* Right Side: Main Content */}
+        <main style={styles.main}>
+          <div style={styles.welcomeSection}>
+            <h1 style={styles.greeting}>Administrator Overview</h1>
+            <p style={styles.subtitle}>Welcome back. Here is what is happening today.</p>
           </div>
-        </div>
 
-        {/* 2x2 Stats Grid */}
-        <div style={styles.statsGrid}>
-          <div style={styles.statBox}
-               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(139, 92, 246, 0.1)'; }}
-               onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.03)'; }}>
-            <div style={styles.statTitle}>Total Employees</div>
-            <div style={styles.statValue}>{dashboardData.totalEmployees}</div>
+          <div style={styles.statsRow}>
+            {stats.map((stat, idx) => (
+              <div 
+                key={idx} 
+                style={{...styles.statCard, background: stat.bg, borderColor: stat.border}}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
+              >
+                <div style={styles.statTitle}>{stat.title}</div>
+                <div style={{...styles.statValue, color: stat.color}}>{stat.value}</div>
+              </div>
+            ))}
           </div>
-          <div style={styles.statBox}
-               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(139, 92, 246, 0.1)'; }}
-               onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.03)'; }}>
-            <div style={styles.statTitle}>Requested Leaves</div>
-            <div style={styles.statValue}>{dashboardData.requestedLeaves}</div>
-          </div>
-          <div style={styles.statBox}
-               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(139, 92, 246, 0.1)'; }}
-               onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.03)'; }}>
-            <div style={styles.statTitle}>Approved Leaves</div>
-            <div style={styles.statValue}>{dashboardData.approvedLeaves}</div>
-          </div>
-          <div style={styles.statBox}
-               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(139, 92, 246, 0.1)'; }}
-               onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.03)'; }}>
-            <div style={styles.statTitle}>Rejected Leaves</div>
-            <div style={styles.statValue}>{dashboardData.rejectedLeaves}</div>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );
 };
 
 const styles = {
-  body: {
-    fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    margin: 0,
-    padding: 0,
-    background: '#f0f4f8',
+  container: {
     minHeight: '100vh',
+    background: '#F9FAFB', 
+    fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     display: 'flex',
     flexDirection: 'column',
-  },
-  header: {
-    background: 'white',
-    padding: '0 40px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-  },
-  headerTop: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '20px 0',
-    borderBottom: '1px solid #f1f5f9',
-  },
-  mainHeading: {
     margin: 0,
-    fontSize: '1.6rem',
-    fontWeight: '800',
-    background: 'linear-gradient(to right, #8b5cf6, #6d28d9)', // Admin Purple
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-  },
-  backButton: {
-    background: 'white',
-    color: '#64748b',
-    border: '1px solid #cbd5e1',
-    padding: '8px 20px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: '600',
-    transition: 'all 0.2s',
+    padding: 0
   },
   navbar: {
+    height: '70px',
+    background: '#FFFFFF',
+    borderBottom: '1px solid #E5E7EB',
     display: 'flex',
-    gap: '12px',
-    padding: '15px 0',
-    overflowX: 'auto',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 40px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10
   },
-  navButton: {
-    background: '#f8fafc',
-    color: '#475569',
-    border: '1px solid #e2e8f0',
-    padding: '10px 24px',
-    borderRadius: '30px', // Pill shape
-    cursor: 'pointer',
+  brand: {
+    fontSize: '20px',
+    fontWeight: '800',
+    color: '#111827',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  },
+  logoIcon: {
+    background: '#4F46E5',
+    color: 'white',
+    width: '32px',
+    height: '32px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  },
+  logoutBtn: {
+    background: '#F3F4F6',
+    color: '#4B5563',
+    border: 'none',
+    padding: '8px 24px',
+    borderRadius: '8px',
     fontWeight: '600',
-    fontSize: '0.95rem',
-    whiteSpace: 'nowrap',
-    transition: 'all 0.2s',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    fontSize: '14px'
   },
-  navButtonHover: {
-    background: '#f3e8ff',
-    color: '#7c3aed',
-    borderColor: '#ddd6fe',
+  layout: {
+    display: 'flex',
+    flex: 1
   },
-  mainContent: {
-    flex: 1,
-    padding: '40px',
-    maxWidth: '1000px',
-    margin: '0 auto',
-    width: '100%',
-    boxSizing: 'border-box',
+  sidebar: {
+    width: '260px',
+    background: '#FFFFFF',
+    borderRight: '1px solid #E5E7EB',
+    padding: '30px 20px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    gap: '6px'
   },
-  welcomeBox: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px',
-    background: 'white',
-    padding: '20px 40px',
-    borderRadius: '50px', 
-    boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
-    marginBottom: '50px',
-    width: 'fit-content',
-  },
-  profilePic: {
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-    border: '3px solid #f3e8ff',
-  },
-  welcomeSub: {
-    margin: '0 0 4px 0',
-    fontSize: '0.9rem',
-    color: '#64748b',
+  sidebarTitle: {
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#9CA3AF',
     textTransform: 'uppercase',
     letterSpacing: '1px',
+    marginBottom: '15px',
+    paddingLeft: '10px'
+  },
+  navItem: {
+    padding: '12px 16px',
+    borderRadius: '10px',
+    color: '#4B5563',
     fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    fontSize: '14px'
   },
-  welcomeText: {
-    margin: 0,
-    fontSize: '1.4rem',
+  navItemActive: {
+    background: '#EEF2FF',
+    color: '#4F46E5'
+  },
+  main: {
+    flex: 1,
+    padding: '50px 60px',
+    overflowY: 'auto'
+  },
+  welcomeSection: {
+    marginBottom: '40px'
+  },
+  greeting: {
+    fontSize: '32px',
     fontWeight: '800',
-    color: '#1e293b',
+    color: '#111827',
+    margin: '0 0 8px 0'
   },
-  statsGrid: {
+  subtitle: {
+    fontSize: '16px',
+    color: '#6B7280',
+    margin: 0
+  },
+  statsRow: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-    gap: '30px',
-    width: '100%',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '24px'
   },
-  statBox: {
-    background: 'white',
-    borderRadius: '24px',
-    padding: '50px 30px',
-    textAlign: 'center',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-    transition: 'transform 0.3s, box-shadow 0.3s',
-    border: '1px solid #f8fafc',
-    position: 'relative',
-    overflow: 'hidden',
-    cursor: 'default',
+  statCard: {
+    padding: '35px 30px',
+    borderRadius: '20px',
+    border: '1px solid',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px',
+    transition: 'transform 0.3s ease',
+    cursor: 'default'
   },
   statTitle: {
-    fontSize: '1.2rem',
-    color: '#64748b',
-    fontWeight: '600',
-    marginBottom: '20px',
+    fontSize: '14px',
+    fontWeight: '700',
+    color: '#4B5563',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+    letterSpacing: '0.5px'
   },
   statValue: {
-    fontSize: '4.5rem',
+    fontSize: '48px',
     fontWeight: '800',
-    color: '#7c3aed', // Purple accent
-    margin: 0,
-    lineHeight: '1',
+    lineHeight: 1,
+    margin: 0
   }
 };
 

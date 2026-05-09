@@ -1,132 +1,180 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 function EmployeeInfo() {
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  // Function to handle button clicks
-  const handleButtonClick = (path) => {
-    navigate(path); // Navigate to the specified path
-  };
+  const navigate = useNavigate();
 
   return (
-    <>
-      <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        body, html {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #E4EfE9, #93A5CF);
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .header {
-          width: 100%;
-          text-align: center;
-          padding: 30px;
-          font-size: 3rem;
-          font-weight: bold;
-          background: linear-gradient(135deg, #8e9eab, rgb(168, 178, 178));
-          color: black;
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-
-        .back-button {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: linear-gradient(135deg, #6A11CB, #2575FC);
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 8px;
-          font-size: 1.5rem;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .back-button:hover {
-          background: linear-gradient(135deg, #4C9AFF, #A6C8FF);
-        }
-
-        .employee-info {
-          position: absolute;
-          top: 160px;
-          left: 50px;
-          font-size: 2.8rem;
-          font-weight: bold;
-          color:rgb(52, 50, 50);
-        }
-
-        .button-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 20px;
-          margin-top: 80px;
-        }
-
-        .row {
-          display: flex;
-          gap: 30px;
-        }
-
-        .category-button {
-          background: linear-gradient(135deg, #E8F5C8, #9FA5D5);
-          color: white;
-          padding: 20px 60px;
-          border: none;
-          border-radius: 12px;
-          font-size: 2.5rem;
-          font-weight: bold;
-          cursor: pointer;
-          box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .category-button:hover {
-          background: linear-gradient(135deg, #D1E8FF, #B3CFF2);
-        }
-      `}</style>
-
-      <div className="header">Staff Leave Hub</div>
-      <button className="back-button" onClick={() => navigate("/A_Dashboard")}>
-          Back
+    <div style={styles.container}>
+      {/* Top Navbar */}
+      <nav style={styles.navbar}>
+        <div style={styles.brand}>
+          <div style={styles.logoIcon}>A</div>
+          Staff Leave Hub
+        </div>
+        <button style={styles.backBtn} onClick={() => navigate("/A_Dashboard")}>
+          Back to Dashboard
         </button>
-      <div className="employee-info">Employee Info</div>
+      </nav>
 
-      <div className="button-container">
-        <div className="row">
-          {/* Teaching Staff Button */}
-          <button
-            className="category-button"
-            onClick={() => handleButtonClick("/A_personalinfo")} // Navigate to /teaching-staff
-          >
-            Teaching Staff
-          </button>
-
-          {/* Non-Teaching Staff Button */}
-          <button
-            className="category-button"
-            onClick={() => handleButtonClick("/A_personalinfo")} // Navigate to /non-teaching-staff
-          >
-            Non-Teaching Staff
-          </button>
+      <main style={styles.main}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Employee Directory</h1>
+          <p style={styles.subtitle}>Select a category to view personnel information.</p>
         </div>
 
-        {/* Employee Button */}
-       
-      </div>
-    </>
+        <div style={styles.grid}>
+          {/* Teaching Card */}
+          <div 
+            style={styles.card}
+            onClick={() => navigate("/A_personalinfo")}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(79, 70, 229, 0.1)';
+              e.currentTarget.style.borderColor = '#4F46E5';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#E5E7EB';
+            }}
+          >
+            <div style={{...styles.iconWrapper, background: '#EEF2FF', color: '#4F46E5'}}>
+              👨‍🏫
+            </div>
+            <h2 style={styles.cardTitle}>Teaching Staff</h2>
+            <p style={styles.cardDesc}>Manage professors, lecturers, and academic instructors.</p>
+          </div>
+
+          {/* Non-Teaching Card */}
+          <div 
+            style={styles.card}
+            onClick={() => navigate("/A_personalinfo")}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.1)';
+              e.currentTarget.style.borderColor = '#10B981';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#E5E7EB';
+            }}
+          >
+            <div style={{...styles.iconWrapper, background: '#ECFDF5', color: '#10B981'}}>
+              👨‍💼
+            </div>
+            <h2 style={styles.cardTitle}>Non-Teaching Staff</h2>
+            <p style={styles.cardDesc}>Manage administration, support, and technical personnel.</p>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
+
+const styles = {
+  container: {
+    minHeight: '100vh',
+    background: '#F9FAFB',
+    fontFamily: "'Inter', 'Segoe UI', sans-serif"
+  },
+  navbar: {
+    height: '70px',
+    background: '#FFFFFF',
+    borderBottom: '1px solid #E5E7EB',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 40px'
+  },
+  brand: {
+    fontSize: '20px',
+    fontWeight: '800',
+    color: '#111827',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  },
+  logoIcon: {
+    background: '#4F46E5',
+    color: 'white',
+    width: '32px',
+    height: '32px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  },
+  backBtn: {
+    background: '#FFFFFF',
+    color: '#4B5563',
+    border: '1px solid #D1D5DB',
+    padding: '8px 20px',
+    borderRadius: '8px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.2s ease'
+  },
+  main: {
+    maxWidth: '1000px',
+    margin: '0 auto',
+    padding: '80px 40px'
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '60px'
+  },
+  title: {
+    fontSize: '36px',
+    fontWeight: '800',
+    color: '#111827',
+    margin: '0 0 15px 0'
+  },
+  subtitle: {
+    fontSize: '18px',
+    color: '#6B7280',
+    margin: 0
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '40px'
+  },
+  card: {
+    background: '#FFFFFF',
+    border: '2px solid #E5E7EB',
+    borderRadius: '24px',
+    padding: '50px 40px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
+  },
+  iconWrapper: {
+    width: '90px',
+    height: '90px',
+    borderRadius: '24px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '40px',
+    margin: '0 auto 30px auto'
+  },
+  cardTitle: {
+    fontSize: '24px',
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: '15px',
+    margin: 0
+  },
+  cardDesc: {
+    fontSize: '15px',
+    color: '#6B7280',
+    lineHeight: '1.6',
+    margin: 0
+  }
+};
 
 export default EmployeeInfo;
