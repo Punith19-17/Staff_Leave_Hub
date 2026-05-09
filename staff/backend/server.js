@@ -412,23 +412,81 @@ app.post("/api/departments", (req, res) => {
 });
 
 // API to insert service information
-app.post("/api/experience", (req, res) => {
-  const { employee_id, name_of_organization, s_from, s_to } = req.body;
+// API to insert service/experience information
 
-  const query = `
-    INSERT INTO experience_details (employee_id, name_of_organization, s_from, s_to)
-    VALUES (?, ?, ?, ?)
-  `;
+app.post("/api/experience", async (req, res) => {
 
-  db.query(query, [employee_id, name_of_organization, s_from, s_to], (err, result) => {
-    if (err) {
-      console.error("Error inserting data:", err);
-      res.status(500).send("Error inserting data");
-    } else {
-      res.status(200).send("Data inserted successfully");
+  try {
+
+    console.log("Received experience data:", req.body);
+
+    const {
+      employee_id,
+      name_of_organization,
+      s_from,
+      s_to
+    } = req.body;
+
+    // Validation
+    if (
+      !employee_id ||
+      !name_of_organization ||
+      !s_from ||
+      !s_to
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
     }
-  });
+
+    // SQL Query
+    const query = `
+      INSERT INTO experience_details
+      (
+        employee_id,
+        name_of_organization,
+        s_from,
+        s_to
+      )
+      VALUES (?, ?, ?, ?)
+    `;
+
+    // MYSQL2/PROMISE QUERY
+    const [result] = await db.query(
+      query,
+      [
+        employee_id,
+        name_of_organization,
+        s_from,
+        s_to
+      ]
+    );
+
+    console.log("Experience inserted successfully:", result);
+
+    // SUCCESS RESPONSE
+    return res.status(200).json({
+      success: true,
+      message: "Experience data inserted successfully",
+      insertedId: result.insertId
+    });
+
+  } catch (error) {
+
+    console.error("Experience API Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to insert experience data",
+      error: error.message
+    });
+
+  }
+
 });
+
+
 // API to handle form submission staff signup
 app.post('/api/employee', (req, res) => {
   const { employee_id, name, password } = req.body;
