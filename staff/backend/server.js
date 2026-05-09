@@ -1782,54 +1782,49 @@ app.get('/api/employee/leaves', async (req, res) => {
 });
 
 // API for ADashboard 
-app.get("/api/Adashboard", (req, res) => {
-  // First query: Get total employees count
-  db.query(
-    "SELECT COUNT(*) as count FROM personal_information", 
-    (err, employeeResults) => {
-      if (err) {
-        console.error("Error fetching employee count:", err);
-        return res.status(500).json({ 
-          error: "Database error",
-          message: "Failed to get employee count" 
-        });
-      }
+app.get("/api/Adashboard", async (req, res) => {
 
-      const totalEmployees = employeeResults[0] ? employeeResults[0].count : 0;
+  try {
 
-      // Second query: Get leave counts
-      db.query(
-        `SELECT 
-          SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
-          SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as approved,
-          SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) as rejected
-         FROM leave_request`,
-        (err, leaveResults) => {
-          if (err) {
-            console.error("Error fetching leave counts:", err);
-            return res.status(500).json({ 
-              error: "Database error",
-              message: "Failed to get leave counts" 
-            });
-          }
+    // Total employees
+    const [employeeResults] = await db.query(
+      "SELECT COUNT(*) as count FROM personal_information"
+    );
 
-          const leaveData = leaveResults[0] || {
-            pending: 0,
-            approved: 0,
-            rejected: 0
-          };
+    const totalEmployees =
+      employeeResults[0]?.count || 0;
 
-          // Send response
-          res.json({
-            totalEmployees: totalEmployees,
-            requestedLeaves: leaveData.pending || 0,
-            approvedLeaves: leaveData.approved || 0,
-            rejectedLeaves: leaveData.rejected || 0
-          });
-        }
-      );
-    }
-  );
+    // Leave counts
+    const [leaveResults] = await db.query(
+      `
+      SELECT 
+        SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
+        SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as approved,
+        SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) as rejected
+      FROM leave_request
+      `
+    );
+
+    const leaveData = leaveResults[0] || {};
+
+    return res.status(200).json({
+      totalEmployees,
+      requestedLeaves: leaveData.pending || 0,
+      approvedLeaves: leaveData.approved || 0,
+      rejectedLeaves: leaveData.rejected || 0
+    });
+
+  } catch (error) {
+
+    console.error("ADASHBOARD ERROR:", error);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
 });
 
 
