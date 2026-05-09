@@ -12,8 +12,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "*",
+  origin: "https://staff-leave-hub-jlpw.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 // Session middleware
