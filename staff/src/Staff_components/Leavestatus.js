@@ -23,58 +23,71 @@ const LeaveHub = ({ employeeId }) => {
     navigate('/dashboard');
   }, [navigate]);
 
-  useEffect(() => {
+useEffect(() => {
 
-    const fetchLeaves = async () => {
+  const fetchLeaves = async () => {
 
-      try {
+    setLoading(true);
+    setError('');
 
-        const response = await axios.get(
-          'https://staffleavehub-production.up.railway.app/api/employee/leaves',
-          {
-            withCredentials: true
-          }
-        );
+    try {
 
-        console.log("LEAVE RESPONSE:", response.data);
+      console.log("Fetching leave data...");
 
-        if (response.data.success) {
-
-          setLeaves(response.data.data);
-
-        } else {
-
-          setError(
-            response.data.message ||
-            'Failed to fetch leave data'
-          );
-
+      const response = await axios.get(
+        'https://staffleavehub-production.up.railway.app/api/employee/leaves',
+        {
+          withCredentials: true
         }
+      );
 
-      } catch (err) {
+      console.log("FULL RESPONSE:", response);
 
-        console.error('Error fetching leaves:', err);
+      if (response.data && response.data.success) {
 
-        setError(
-          err.response?.data?.message ||
-          'Failed to fetch leave data. Please try again later.'
-        );
+        console.log("LEAVES:", response.data.data);
 
-        if (err.response?.status === 401) {
-          navigate('/login');
-        }
+        setLeaves(response.data.data || []);
 
-      } finally {
+      } else {
 
-        setLoading(false);
+        setError("No leave data found");
 
       }
 
-    };
+    } catch (err) {
 
-    fetchLeaves();
+      console.error("FETCH ERROR:", err);
 
-  }, [employeeId, navigate]);
+      if (err.response?.status === 401) {
+
+        setError("Session expired. Please login again.");
+
+        navigate('/login');
+
+      } else {
+
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to fetch leave data"
+        );
+
+      }
+
+    } finally {
+
+      console.log("Loading finished");
+
+      setLoading(false);
+
+    }
+
+  };
+
+  fetchLeaves();
+
+}, [navigate]);
 
   const getStatusColor = (status) => {
 
@@ -138,10 +151,13 @@ const LeaveHub = ({ employeeId }) => {
       <div className="leave-hub-content">
 
         {loading ? (
-
-          <div className="loading-spinner"></div>
-
-        ) : error ? (
+  <div>
+    <div className="loading-spinner"></div>
+    <p style={{ textAlign: "center" }}>
+      Loading leave records...
+    </p>
+  </div>
+): error ? (
 
           <div className="error-message">
             {error}
