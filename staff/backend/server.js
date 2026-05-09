@@ -633,6 +633,24 @@ app.post('/api/record-login', async (req, res) => {
   }
 });
 
+// Authentication middleware
+
+// Authentication middleware
+
+const requireAuth = (req, res, next) => {
+
+  if (!req.session.userId) {
+
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access"
+    });
+
+  }
+
+  next();
+
+};
 
 // Get user profile data
 app.get('/api/profile', requireAuth, (req, res) => {
@@ -1232,8 +1250,7 @@ try {
 
   sql += " GROUP BY status";
 
-  const [results] = await db().query(sql, params);
-  
+const [results] = await db.query(sql, params);  
   // Convert to more usable format
   const stats = {
     present: 0,
