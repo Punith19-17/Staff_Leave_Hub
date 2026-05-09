@@ -49,7 +49,7 @@ const AboutUs = () => {
         </div>
 
         {/* Team Members Section */}
-        <h2 style={styles.teamTitle}>The Engineering Team</h2>
+        <h2 style={styles.teamTitle}>The Visionaries</h2>
         <div style={styles.teamGrid}>
           
           {/* Punith A Card */}
@@ -106,13 +106,13 @@ const AboutUs = () => {
 
 const styles = {
   page: {
-    height: '100vh',
-    overflow: 'hidden', // Disables scrolling globally
+    minHeight: '100vh', // Scrolling is back!
     background: '#FFFFFF',
     fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    overflowX: 'hidden' // Only prevents left-to-right scrolling
   },
   navbar: {
     width: '100%',
@@ -157,15 +157,14 @@ const styles = {
     gap: '8px'
   },
   main: {
-    marginTop: '80px', 
+    marginTop: '120px', // Nice spacing from the top
     flex: 1,
     width: '100%',
     maxWidth: '850px',
-    padding: '30px 20px',
+    padding: '30px 20px 100px 20px', // Padding at the bottom for smooth scrolling
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center', // Centers everything perfectly vertically
     textAlign: 'center',
     boxSizing: 'border-box'
   },
@@ -186,17 +185,17 @@ const styles = {
     fontWeight: '800',
     color: '#0F172A',
     lineHeight: '1.1',
-    margin: '0 0 30px 0',
+    margin: '0 0 40px 0',
     letterSpacing: '-0.02em'
   },
   guideCard: {
     background: '#FFFFFF',
     border: '1px solid #E2E8F0',
     borderRadius: '20px',
-    padding: '30px',
+    padding: '40px 30px',
     width: '100%',
     boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-    marginBottom: '30px',
+    marginBottom: '40px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -210,44 +209,44 @@ const styles = {
     background: 'linear-gradient(90deg, #10B981, #34D399)'
   },
   guideAvatar: {
-    width: '60px',
-    height: '60px',
+    width: '70px',
+    height: '70px',
     borderRadius: '50%',
     background: '#ECFDF5',
     color: '#059669',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '24px',
+    fontSize: '28px',
     fontWeight: '800',
     marginBottom: '15px',
     border: '3px solid #FFFFFF',
     boxShadow: '0 8px 20px rgba(5, 150, 105, 0.15)'
   },
   guideName: {
-    fontSize: '1.5rem',
+    fontSize: '1.6rem',
     fontWeight: '800',
     color: '#0F172A',
     margin: '0 0 5px 0'
   },
   guideRole: {
-    fontSize: '1rem',
+    fontSize: '1.05rem',
     color: '#059669',
     fontWeight: '700',
-    margin: '0 0 10px 0'
+    margin: '0 0 15px 0'
   },
   guideText: {
-    fontSize: '0.95rem',
+    fontSize: '1rem',
     color: '#475569',
-    lineHeight: '1.5',
+    lineHeight: '1.6',
     margin: 0,
     maxWidth: '600px'
   },
   teamTitle: {
-    fontSize: '1.5rem',
+    fontSize: '1.8rem',
     fontWeight: '800',
     color: '#0F172A',
-    marginBottom: '20px'
+    marginBottom: '25px'
   },
   teamGrid: {
     display: 'grid',
@@ -258,7 +257,7 @@ const styles = {
   memberCard: {
     background: '#F8FAFC',
     borderRadius: '20px',
-    padding: '25px 20px',
+    padding: '30px 20px',
     border: '2px solid #F1F5F9',
     transition: 'all 0.3s ease',
     display: 'flex',
@@ -267,25 +266,25 @@ const styles = {
     cursor: 'default'
   },
   memberAvatar: {
-    width: '70px',
-    height: '70px',
+    width: '80px',
+    height: '80px',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '28px',
+    fontSize: '32px',
     fontWeight: '800',
     marginBottom: '15px',
     border: '3px solid #FFFFFF'
   },
   memberName: {
-    fontSize: '1.3rem',
+    fontSize: '1.4rem',
     fontWeight: '800',
     color: '#0F172A',
     margin: '0 0 5px 0'
   },
   memberRole: {
-    fontSize: '0.9rem',
+    fontSize: '0.95rem',
     color: '#64748B',
     fontWeight: '600',
     margin: 0
