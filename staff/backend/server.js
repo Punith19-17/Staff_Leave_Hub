@@ -33,10 +33,13 @@ app.use((req, res, next) => {
 // Session middleware
 app.use(session({
   secret: "your_secret_key",
+
   resave: false,
+
   saveUninitialized: false,
 
-  cookie: {
+  proxy: true,
+ cookie: {
     secure: true,
     sameSite: "none",
     httpOnly: true,
@@ -44,11 +47,14 @@ app.use(session({
   }
 }));
 
-// Session debug logs
 app.use((req, res, next) => {
-  console.log("Session ID:", req.sessionID);
-  console.log("Session data:", req.session);
+
+  console.log("SESSION:", req.session);
+
+  console.log("USER ID:", req.session.userId);
+
   next();
+
 });
 
 // Create uploads folder automatically if not exists
@@ -579,10 +585,12 @@ app.post('/api/login', async (req, res) => {
 
     // Validation
     if (!employee_id || !password) {
+
       return res.status(400).json({
         success: false,
         message: "Employee ID and password required"
       });
+
     }
 
     // SQL query
@@ -591,7 +599,6 @@ app.post('/api/login', async (req, res) => {
       WHERE employee_id = ? AND password = ?
     `;
 
-    // MYSQL2/PROMISE STYLE
     const [results] = await db.query(
       query,
       [employee_id, password]
@@ -609,31 +616,47 @@ app.post('/api/login', async (req, res) => {
 
     }
 
-    // Save session
-    req.session.userId = employee_id;
-
-    console.log("SESSION USER:", req.session.userId);
-
-    // SAVE SESSION FIRST
-    req.session.save((err) => {
+    // REGENERATE SESSION
+    req.session.regenerate((err) => {
 
       if (err) {
 
-        console.error("Session save error:", err);
+        console.error("Session regenerate error:", err);
 
         return res.status(500).json({
           success: false,
-          message: "Session save failed"
+          message: "Session error"
         });
 
       }
 
-      console.log("Session saved successfully");
+      // SAVE USER ID
+      req.session.userId = employee_id;
 
-      return res.status(200).json({
-        success: true,
-        message: "Login successful",
-        employee_id
+      console.log("SESSION USER:", req.session.userId);
+
+      // SAVE SESSION
+      req.session.save((err) => {
+
+        if (err) {
+
+          console.error("Session save error:", err);
+
+          return res.status(500).json({
+            success: false,
+            message: "Session save failed"
+          });
+
+        }
+
+        console.log("Session saved successfully");
+
+        return res.status(200).json({
+          success: true,
+          message: "Login successful",
+          employee_id
+        });
+
       });
 
     });
