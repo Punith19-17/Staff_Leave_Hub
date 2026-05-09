@@ -3,6 +3,7 @@ const mysql = require("mysql2/promise");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const fs = require("fs");
 
@@ -12,6 +13,8 @@ app.set("trust proxy", 1);
 
 // Middleware
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.use(cors({
   origin: "https://staff-leave-hub-jlpw.vercel.app",
@@ -32,22 +35,18 @@ app.use((req, res, next) => {
 
 // Session middleware
 app.use(session({
+  name: "staffleavehub.sid",
   secret: process.env.SESSION_SECRET || "staffleavehubsecret",
-
   resave: false,
-
   saveUninitialized: true,
-
   proxy: true,
 
-  name: "staffleavehub.sid",
-
-  cookie: {
-    secure: true,
-    sameSite: "none",
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000
-  }
+cookie: {
+  secure: false,
+  httpOnly: true,
+  sameSite: "lax",
+  maxAge: 1000 * 60 * 60 * 24
+}
 }));
 
 app.use((req, res, next) => {
@@ -196,8 +195,8 @@ app.post("/login", async (req, res) => {
     }
 
     // SAVE SESSION
-    req.session.userId = user.id || user.email_id;
-
+    req.session.userId = user.email_id;
+console.log("SESSION SAVED:", req.session.userId);
     req.session.save((err) => {
 
       if (err) {
