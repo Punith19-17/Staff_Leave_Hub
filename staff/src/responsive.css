@@ -1,150 +1,199 @@
-/* Mobile Responsive Fix */
+/* =========================
+   GLOBAL MOBILE FIX
+========================= */
 
 @media screen and (max-width: 768px) {
 
-  body {
-    overflow-x: hidden;
+  * {
+    box-sizing: border-box;
   }
 
-  /* Main Containers */
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  /* =========================
+     MAIN LAYOUTS
+  ========================= */
+
   .container,
   .main-container,
   .dashboard-container,
+  .dashboard-content,
+  .admin-container,
   .content,
-  .wrapper {
-    width: 100% !important;
-    padding: 10px !important;
-    margin: 0 !important;
-  }
-
-  /* Cards */
-  .card,
-  .form-card,
-  .leave-card {
-    width: 100% !important;
-    padding: 15px !important;
-    border-radius: 12px !important;
-  }
-
-  /* Inputs */
-  input,
-  select,
-  textarea,
-  button {
-    width: 100% !important;
-    font-size: 16px !important;
-  }
-
-  /* Tables */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  /* Flex layouts */
-  .row,
-  .flex,
-  .navbar,
-  .topbar {
-    flex-direction: column !important;
-    gap: 10px;
-  }
-
-  /* Sidebar */
-  .sidebar {
-    width: 100% !important;
-    position: relative !important;
-    height: auto !important;
-  }
-
-  /* Images */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Buttons */
-  button {
-    min-height: 45px;
-  }
-
-  /* Headings */
-  h1 {
-    font-size: 28px !important;
-  }
-
-  h2 {
-    font-size: 24px !important;
-  }
-
-  h3 {
-    font-size: 20px !important;
-  }
-
-}
-
-@media screen and (max-width: 768px) {
-
-  body {
-    overflow-x: hidden;
-  }
-
-  .sidebar {
-    width: 100% !important;
-    height: auto !important;
-    position: relative !important;
-  }
-
+  .wrapper,
   .main-content,
-  .dashboard-content {
+  .page-container {
     width: 100% !important;
-    margin-left: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     padding: 10px !important;
+    overflow-x: hidden !important;
   }
 
-  .dashboard-container,
-  .admin-container {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .card,
-  .dashboard-card {
-    width: 100% !important;
-  }
-}
-
-@media screen and (max-width: 768px) {
+  /* =========================
+     NAVBAR / HEADER
+  ========================= */
 
   .navbar,
   .topbar,
-  header {
+  header,
+  .header {
+    width: 100% !important;
     padding: 10px !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
     align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
   }
 
   .logo,
   .brand,
   .title {
-    font-size: 24px !important;
+    font-size: 18px !important;
     line-height: 1.2 !important;
+    word-break: break-word;
   }
 
-  .back-btn,
-  .nav-btn,
-  .login-btn {
-    width: auto !important;
-    padding: 10px 15px !important;
-    font-size: 14px !important;
+  /* =========================
+     SIDEBAR
+  ========================= */
+
+  .sidebar {
+    width: 100% !important;
+    position: relative !important;
+    height: auto !important;
+    padding: 10px !important;
   }
 
+  /* =========================
+     CARDS
+  ========================= */
+
+  .card,
+  .dashboard-card,
   .form-card,
   .login-card,
-  .signup-card {
-    margin: 20px auto !important;
-    width: 95% !important;
+  .signup-card,
+  .leave-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px auto !important;
+    padding: 15px !important;
+    border-radius: 12px !important;
+  }
+
+  /* =========================
+     FORMS
+  ========================= */
+
+  form {
+    width: 100% !important;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 16px !important;
+    padding: 12px !important;
+  }
+
+  /* =========================
+     BUTTONS
+  ========================= */
+
+  button,
+  .btn,
+  .login-btn,
+  .nav-btn,
+  .back-btn {
+    width: 100% !important;
+    min-height: 45px !important;
+    font-size: 16px !important;
+    padding: 12px !important;
+    border-radius: 10px !important;
+  }
+
+  /* =========================
+     FLEX & GRID FIX
+  ========================= */
+
+  .row,
+  .flex,
+  .grid,
+  .dashboard-row,
+  .card-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* =========================
+     TABLE FIX
+  ========================= */
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* =========================
+     IMAGES
+  ========================= */
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  /* =========================
+     TEXT
+  ========================= */
+
+  h1 {
+    font-size: 28px !important;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 24px !important;
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 20px !important;
+    text-align: center;
+  }
+
+  p {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  /* =========================
+     OVERFLOW FIX
+  ========================= */
+
+  div,
+  section,
+  main,
+  aside {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
   }
 }
