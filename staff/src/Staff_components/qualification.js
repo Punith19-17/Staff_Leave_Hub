@@ -3,76 +3,139 @@ import { useNavigate } from "react-router-dom";
 
 function TeachingStaff() {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    employee_id: '',
-    qualification: '',
-    specialization: '',
-    year_of_pass: '',
-    qualification_documents: null
+    employee_id: "",
+    qualification: "",
+    specialization: "",
+    year_of_pass: "",
+    qualification_documents: null,
   });
 
   const fileInputRef = useRef(null);
 
+  // ================= HANDLE SUBMIT =================
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = new FormData();
+
+      data.append("employee_id", formData.employee_id);
+      data.append("qualification", formData.qualification);
+      data.append("specialization", formData.specialization);
+      data.append("year_of_pass", formData.year_of_pass);
+      data.append(
+        "qualification_documents",
+        formData.qualification_documents
+      );
+
+      const response = await fetch(
+        "https://YOUR-RAILWAY-BACKEND-URL.up.railway.app/submit-qualification",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message || "Qualification data inserted successfully");
+
+        // Reset form
+        setFormData({
+          employee_id: "",
+          qualification: "",
+          specialization: "",
+          year_of_pass: "",
+          qualification_documents: null,
+        });
+
+        // Clear file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      } else {
+        alert(result.message || "Failed to insert data");
+      }
+    } catch (error) {
+      console.error("Submit Error:", error);
+      alert("Server error occurred");
+    }
+  };
+
+  // ================= HANDLE NEXT =================
+
   const handleNext = () => {
-    // Validate all fields before navigating
-    const { employee_id, qualification, specialization, year_of_pass, qualification_documents } = formData;
-    
-    if (!employee_id || !qualification || !specialization || !year_of_pass || !qualification_documents) {
-      alert('Please fill in all fields before proceeding.');
+    const {
+      employee_id,
+      qualification,
+      specialization,
+      year_of_pass,
+      qualification_documents,
+    } = formData;
+
+    if (
+      !employee_id ||
+      !qualification ||
+      !specialization ||
+      !year_of_pass ||
+      !qualification_documents
+    ) {
+      alert("Please fill in all fields before proceeding.");
       return;
     }
 
-    // Validate year format (4 digits)
     if (!/^\d{4}$/.test(year_of_pass)) {
-      alert('Year of passing must be a 4-digit year');
+      alert("Year of passing must be a 4-digit year");
       return;
     }
 
-    // If all validations pass, navigate
     navigate("/Service");
   };
 
-const handleChange = (e) => {
-  const { name, value, files } = e.target;
+  // ================= HANDLE CHANGE =================
 
-  // File handling
-  if (name === "qualification_documents") {
-    const file = files[0];
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
 
-    if (!file) return;
+    // File handling
+    if (name === "qualification_documents") {
+      const file = files[0];
 
-    // Allowed file types
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
+      if (!file) return;
 
-    // Validate file type
-    if (!allowedTypes.includes(file.type)) {
-      alert("Only PDF, DOC, and DOCX files are allowed.");
-      return;
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+
+      // Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        alert("Only PDF, DOC, and DOCX files are allowed.");
+        return;
+      }
+
+      // Validate file size
+      if (file.size > 50 * 1024 * 1024) {
+        alert("File size must be less than 50MB.");
+        return;
+      }
+
+      setFormData({
+        ...formData,
+        [name]: file,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
     }
-
-    // Validate file size (50MB max)
-    if (file.size > 50 * 1024 * 1024) {
-      alert("File size must be less than 50MB.");
-      return;
-    }
-
-    setFormData({
-      ...formData,
-      [name]: file,
-    });
-
-  } else {
-    // Normal input handling
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  }
-};
+  };
 
   return (
     <>
@@ -82,6 +145,7 @@ const handleChange = (e) => {
           padding: 0;
           box-sizing: border-box;
         }
+
         body, html {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
@@ -141,7 +205,8 @@ const handleChange = (e) => {
           color: white;
         }
 
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
           padding: 12px;
           font-size: 1.2rem;
           border-radius: 8px;
@@ -150,7 +215,8 @@ const handleChange = (e) => {
           color: black;
         }
 
-        .submit-button, .next-button {
+        .submit-button,
+        .next-button {
           background: linear-gradient(135deg, #667eea, #764ba2);
           color: white;
           padding: 12px 50px;
@@ -162,7 +228,8 @@ const handleChange = (e) => {
           align-self: center;
         }
 
-        .submit-button:hover, .next-button:hover {
+        .submit-button:hover,
+        .next-button:hover {
           background: #66D3FA;
         }
 
@@ -175,24 +242,32 @@ const handleChange = (e) => {
       `}</style>
 
       <div className="header">Staff Leave Hub</div>
-      <div className="teaching-staff">Qualification Details</div>
+
+      <div className="teaching-staff">
+        Qualification Details
+      </div>
 
       <div className="form-container">
         <form onSubmit={handleSubmit}>
+
           <div className="form-row">
+
             <div className="form-group">
               <label>Employee ID</label>
+
               <input
                 type="text"
                 name="employee_id"
-                placeholder="Enter Employee_Id"
+                placeholder="Enter Employee ID"
                 required
                 value={formData.employee_id}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-group">
               <label>Qualification</label>
+
               <input
                 type="text"
                 name="qualification"
@@ -205,6 +280,7 @@ const handleChange = (e) => {
 
             <div className="form-group">
               <label>Specialization</label>
+
               <input
                 type="text"
                 name="specialization"
@@ -214,11 +290,14 @@ const handleChange = (e) => {
                 onChange={handleChange}
               />
             </div>
+
           </div>
 
           <div className="form-row">
+
             <div className="form-group">
               <label>Year of Passing</label>
+
               <input
                 type="text"
                 name="year_of_pass"
@@ -231,6 +310,7 @@ const handleChange = (e) => {
 
             <div className="form-group">
               <label>Qualification Documents</label>
+
               <input
                 type="file"
                 name="qualification_documents"
@@ -240,12 +320,28 @@ const handleChange = (e) => {
                 ref={fileInputRef}
               />
             </div>
+
           </div>
 
           <div className="button-container">
-            <button className="submit-button" type="submit">Submit</button>
-            <button className="next-button" type="button" onClick={handleNext}>Next</button>
+
+            <button
+              className="submit-button"
+              type="submit"
+            >
+              Submit
+            </button>
+
+            <button
+              className="next-button"
+              type="button"
+              onClick={handleNext}
+            >
+              Next
+            </button>
+
           </div>
+
         </form>
       </div>
     </>
