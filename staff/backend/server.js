@@ -43,20 +43,14 @@ const sessionStore = new MySQLStore({
 });
 // Session middleware
 app.use(session({
-  key: "staffleavehub.sid",
-
-  secret: process.env.SESSION_SECRET || "staffleavehubsecret",
-
   store: sessionStore,
-
+  secret: process.env.SESSION_SECRET || "staffleavehubsecret",
   resave: false,
-
   saveUninitialized: false,
-
   cookie: {
-    secure: false,
+    secure: true,
+    sameSite: "none",
     httpOnly: true,
-    sameSite: "lax",
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
