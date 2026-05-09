@@ -1,193 +1,343 @@
-/* =========================
-   GLOBAL MOBILE FIX
-========================= */
+/* =========================================
+   COMPLETE MOBILE RESPONSIVE FIX
+   Staff Leave Hub
+========================================= */
 
 @media screen and (max-width: 768px) {
 
+  /* =========================================
+     GLOBAL RESET
+  ========================================= */
+
   * {
-    box-sizing: border-box;
+    box-sizing: border-box !important;
   }
 
   html,
   body {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     overflow-x: hidden !important;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    scroll-behavior: smooth;
   }
 
   body {
-    font-size: 14px;
-  }
-
-  /* =========================
-     MAIN LAYOUTS
-  ========================= */
-
-  .container,
-  .main-container,
-  .dashboard-container,
-  .dashboard-content,
-  .admin-container,
-  .content,
-  .wrapper,
-  .main-content,
-  .page-container {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 10px !important;
     overflow-x: hidden !important;
   }
 
-  /* =========================
+  /* =========================================
+     GLOBAL CONTAINERS
+  ========================================= */
+
+  .container,
+  .wrapper,
+  .content,
+  .main-container,
+  .page-container,
+  .dashboard-container,
+  .dashboard-content,
+  .main-content,
+  .admin-container,
+  .staff-container,
+  .content-area,
+  .page-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 12px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* =========================================
      NAVBAR / HEADER
-  ========================= */
+  ========================================= */
 
   .navbar,
   .topbar,
   header,
   .header {
     width: 100% !important;
-    padding: 10px !important;
+
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-direction: column !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    gap: 10px !important;
+    justify-content: center !important;
+
+    gap: 12px !important;
+
+    padding: 12px !important;
+
+    overflow-x: hidden !important;
   }
 
   .logo,
   .brand,
   .title {
-    font-size: 18px !important;
-    line-height: 1.2 !important;
-    word-break: break-word;
-  }
-
-  /* =========================
-     SIDEBAR
-  ========================= */
-
-  .sidebar {
     width: 100% !important;
-    position: relative !important;
-    height: auto !important;
-    padding: 10px !important;
+
+    text-align: center !important;
+
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+
+    word-break: break-word !important;
   }
 
-  /* =========================
+  /* =========================================
+     NAV MENU
+  ========================================= */
+
+  .nav-links,
+  .menu,
+  .nav-menu {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-wrap: wrap !important;
+
+    justify-content: center !important;
+    align-items: center !important;
+
+    gap: 10px !important;
+  }
+
+  /* =========================================
+     BUTTONS
+  ========================================= */
+
+  button,
+  .btn,
+  .nav-btn,
+  .login-btn,
+  .back-btn {
+    width: 100% !important;
+    max-width: 320px !important;
+
+    min-height: 48px !important;
+
+    padding: 12px !important;
+
+    font-size: 16px !important;
+
+    border-radius: 12px !important;
+
+    margin: 6px auto !important;
+
+    display: block !important;
+  }
+
+  /* =========================================
+     HERO SECTION
+  ========================================= */
+
+  .hero,
+  .hero-section,
+  .banner {
+    width: 100% !important;
+
+    padding: 30px 15px !important;
+
+    text-align: center !important;
+  }
+
+  h1,
+  .hero h1 {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
+
+  h2 {
+    font-size: 26px !important;
+    text-align: center !important;
+  }
+
+  h3 {
+    font-size: 20px !important;
+    text-align: center !important;
+  }
+
+  p,
+  .hero p {
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    text-align: center !important;
+  }
+
+  /* =========================================
      CARDS
-  ========================= */
+  ========================================= */
 
   .card,
   .dashboard-card,
+  .stats-card,
   .form-card,
   .login-card,
   .signup-card,
   .leave-card {
     width: 100% !important;
     max-width: 100% !important;
-    margin: 10px auto !important;
-    padding: 15px !important;
-    border-radius: 12px !important;
+
+    padding: 18px !important;
+
+    margin: 15px auto !important;
+
+    border-radius: 16px !important;
+
+    overflow-x: hidden !important;
   }
 
-  /* =========================
-     FORMS
-  ========================= */
+  /* =========================================
+     FLEX & GRID FIX
+  ========================================= */
 
-  form {
+  .row,
+  .grid,
+  .flex,
+  .dashboard-row,
+  .card-container,
+  .cards-wrapper,
+  .stats-container {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    gap: 18px !important;
+  }
+
+  /* =========================================
+     SIDEBAR FIX
+  ========================================= */
+
+  .sidebar,
+  .dashboard-sidebar,
+  .admin-sidebar,
+  aside {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    position: relative !important;
+
+    left: 0 !important;
+    top: 0 !important;
+
+    height: auto !important;
+
+    padding: 15px !important;
+
+    border-right: none !important;
+
+    overflow-x: hidden !important;
+  }
+
+  /* SIDEBAR MENU */
+
+  .sidebar ul,
+  .sidebar-menu,
+  .menu-list {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    gap: 12px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    list-style: none !important;
+  }
+
+  .sidebar li,
+  .sidebar a {
+    width: 100% !important;
+  }
+
+  /* =========================================
+     FORMS
+  ========================================= */
+
+  form,
+  .form-container {
     width: 100% !important;
   }
 
   input,
-  select,
-  textarea {
+  textarea,
+  select {
     width: 100% !important;
     max-width: 100% !important;
-    font-size: 16px !important;
-    padding: 12px !important;
-  }
 
-  /* =========================
-     BUTTONS
-  ========================= */
+    padding: 14px !important;
 
-  button,
-  .btn,
-  .login-btn,
-  .nav-btn,
-  .back-btn {
-    width: 100% !important;
-    min-height: 45px !important;
     font-size: 16px !important;
-    padding: 12px !important;
+
     border-radius: 10px !important;
   }
 
-  /* =========================
-     FLEX & GRID FIX
-  ========================= */
-
-  .row,
-  .flex,
-  .grid,
-  .dashboard-row,
-  .card-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important;
+  label {
+    font-size: 15px !important;
   }
 
-  /* =========================
+  /* =========================================
      TABLE FIX
-  ========================= */
+  ========================================= */
 
   table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
+    width: 100% !important;
+
+    display: block !important;
+
+    overflow-x: auto !important;
+
+    white-space: nowrap !important;
+
+    border-collapse: collapse !important;
   }
 
-  /* =========================
-     IMAGES
-  ========================= */
+  th,
+  td {
+    padding: 10px !important;
+    font-size: 14px !important;
+  }
+
+  /* =========================================
+     IMAGE FIX
+  ========================================= */
 
   img {
     max-width: 100% !important;
     height: auto !important;
-    object-fit: contain;
+
+    display: block !important;
+
+    margin: auto !important;
+
+    object-fit: contain !important;
   }
 
-  /* =========================
-     TEXT
-  ========================= */
+  /* =========================================
+     DASHBOARD CONTENT FIX
+  ========================================= */
 
-  h1 {
-    font-size: 28px !important;
-    text-align: center;
+  .dashboard-layout,
+  .dashboard-page,
+  .staff-page,
+  .leave-page {
+    width: 100% !important;
+
+    padding: 10px !important;
+
+    overflow-x: hidden !important;
   }
 
-  h2 {
-    font-size: 24px !important;
-    text-align: center;
-  }
-
-  h3 {
-    font-size: 20px !important;
-    text-align: center;
-  }
-
-  p {
-    font-size: 15px !important;
-    line-height: 1.6 !important;
-  }
-
-  /* =========================
-     OVERFLOW FIX
-  ========================= */
+  /* =========================================
+     REMOVE OVERFLOW
+  ========================================= */
 
   div,
   section,
@@ -196,4 +346,5 @@
     max-width: 100% !important;
     overflow-x: hidden !important;
   }
+
 }
