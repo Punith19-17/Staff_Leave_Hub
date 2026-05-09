@@ -8,14 +8,21 @@ const fs = require("fs");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(express.json());
 
 app.use(cors({
   origin: "https://staff-leave-hub-jlpw.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.options("*", cors({
+  origin: "https://staff-leave-hub-jlpw.vercel.app",
+  credentials: true
 }));
 // Session middleware
 app.use(session({
@@ -23,9 +30,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
-    maxAge: 24 * 60 * 60 * 1000
-  }
+  secure: true,
+  sameSite: "none",
+  maxAge: 24 * 60 * 60 * 1000
+}
 }));
 
 // Session debug logs
