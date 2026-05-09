@@ -727,30 +727,49 @@ const requireAuth = (req, res, next) => {
 };
 
 // Get user profile data
-app.get('/api/profile', requireAuth, (req, res) => {
-  const employeeId = req.session.userId;
-  
-  if (!employeeId) {
-    return res.status(401).json({ error: 'Not authenticated' });
+app.get('/api/profile', requireAuth, async (req, res) => {
+
+  try {
+
+    const employeeId = req.session.userId;
+
+    console.log("PROFILE SESSION USER:", employeeId);
+
+    if (!employeeId) {
+      return res.status(401).json({
+        error: 'Not authenticated'
+      });
+    }
+
+    const [results] = await db.query(
+      `
+      SELECT * FROM personal_information
+      WHERE employee_id = ?
+      `,
+      [employeeId]
+    );
+
+    console.log("PROFILE RESULTS:", results);
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        error: 'User not found'
+      });
+    }
+
+    return res.json(results[0]);
+
+  } catch (error) {
+
+    console.error("PROFILE API ERROR:", error);
+
+    return res.status(500).json({
+      error: 'Server error',
+      details: error.message
+    });
+
   }
 
-  const query = `
-    SELECT * FROM personal_information 
-    WHERE employee_id = ?
-  `;
-  
-  db.query(query, [employeeId], (err, results) => {
-    if (err) {
-      console.error('Error fetching profile:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    if (!results || results.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    res.json(results[0]);
-  });
 });
 
 app.post("/api/leave-request", upload.single("leave_letter"), async (req, res) => {
