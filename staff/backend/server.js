@@ -5,6 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session);
 const fs = require("fs");
 
 const app = express();
@@ -33,22 +34,32 @@ app.use((req, res, next) => {
   next();
 });
 
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
 // Session middleware
 app.use(session({
-  name: "staffleavehub.sid",
+  key: "staffleavehub.sid",
+
   secret: process.env.SESSION_SECRET || "staffleavehubsecret",
+
+  store: sessionStore,
+
   resave: false,
-  saveUninitialized: true,
-  proxy: true,
 
-cookie: {
-  secure: false,
-  httpOnly: true,
-  sameSite: "lax",
-  maxAge: 1000 * 60 * 60 * 24
-}
+  saveUninitialized: false,
+
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 24
+  }
 }));
-
 app.use((req, res, next) => {
 
   console.log("SESSION:", req.session);
