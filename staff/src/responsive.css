@@ -83,3 +83,34 @@
   }
 
 }
+
+@media screen and (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+  }
+
+  .main-content,
+  .dashboard-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 10px !important;
+  }
+
+  .dashboard-container,
+  .admin-container {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .card,
+  .dashboard-card {
+    width: 100% !important;
+  }
+}
