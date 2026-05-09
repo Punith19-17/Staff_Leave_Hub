@@ -1548,70 +1548,80 @@ app.get('/api/leave-requests/:id', (req, res) => {
 });
 
 // Update leave request status
-app.put('/api/leave-requests/:id', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  
-  const { id } = req.params;
-  const { status, leave_letter } = req.body;
+app.put('/api/leave-requests/:id', async (req, res) => {
 
-  // Validate status
-  if (!status || !['Pending', 'Approved', 'Rejected'].includes(status)) {
-    return res.status(400).json({ 
-      success: false,
-      error: 'Validation error',
-      message: 'Invalid status value'
+  try {
+
+    const { id } = req.params;
+
+    const { status } = req.body;
+
+    console.log("UPDATE REQUEST:", id, status);
+
+    // Validation
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "Status is required"
+      });
+    }
+
+    if (!['Pending', 'Approved', 'Rejected'].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status value"
+      });
+    }
+
+    // UPDATE QUERY
+    const [updateResult] = await db.query(
+      `
+      UPDATE leave_request
+      SET
+        status = ?,
+        updated_at = NOW()
+      WHERE id = ?
+      `,
+      [status, id]
+    );
+
+    console.log("UPDATE RESULT:", updateResult);
+
+    if (updateResult.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Leave request not found"
+      });
+    }
+
+    // FETCH UPDATED RECORD
+    const [updatedRows] = await db.query(
+      `
+      SELECT *
+      FROM leave_request
+      WHERE id = ?
+      `,
+      [id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Leave status updated successfully",
+      data: updatedRows[0]
     });
+
+  } catch (error) {
+
+    console.error("UPDATE LEAVE STATUS ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+
   }
 
-  const sql = `
-    UPDATE leave_request 
-    SET 
-      status = ?,
-      leave_letter = ?,
-      updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `;
-  
-  db.query(sql, [status, leave_letter || null, id], (err, result) => {
-    if (err) {
-      console.error('Error updating leave request:', err);
-      return res.status(500).json({ 
-        success: false,
-        error: 'Database error',
-        message: err.message
-      });
-    }
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Not found',
-        message: 'Leave request not found'
-      });
-    }
-
-    // Return the updated record
-    db.query(
-      `SELECT * FROM leave_request WHERE id = ?`,
-      [id],
-      (err, updatedResults) => {
-        if (err) {
-          console.error('Error fetching updated leave request:', err);
-          return res.status(500).json({ 
-            success: false,
-            error: 'Database error',
-            message: err.message
-          });
-        }
-        
-        res.json({
-          success: true,
-          data: updatedResults[0],
-          message: 'Leave status updated successfully'
-        });
-      }
-    );
-  });
 });
 
 // Submit new leave request (with file upload)
