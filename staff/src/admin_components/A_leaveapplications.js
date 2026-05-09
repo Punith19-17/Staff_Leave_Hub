@@ -7,7 +7,7 @@ const LeaveApplications = () => {
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [status, setStatus] = useState("Pending");
-  const [loading, setLoading] = useState(true);
+const [, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
