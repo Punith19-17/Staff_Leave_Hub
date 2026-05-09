@@ -9,41 +9,95 @@ const AboutUs = () => {
   };
 
   return (
-    <div style={styles.container}>
-      {/* Header */}
-      <header style={styles.header}>
-        <div style={styles.headerTitle}>Staff Leave Hub</div>
+    <div style={styles.page}>
+      {/* Floating Navbar */}
+      <nav style={styles.navbar}>
+        <div style={styles.brand}>
+          <div style={styles.logoMark}></div>
+          Staff Leave Hub
+        </div>
         <button 
-          style={styles.backButton}
-          onMouseOver={(e) => Object.assign(e.target.style, styles.backButtonHover)}
-          onMouseOut={(e) => Object.assign(e.target.style, styles.backButton)}
+          style={styles.backBtn}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = '#E2E8F0';
+            e.currentTarget.style.transform = 'translateX(-3px)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = '#F1F5F9';
+            e.currentTarget.style.transform = 'none';
+          }}
           onClick={handleBackClick}
         >
           ← Back to Home
         </button>
-      </header>
+      </nav>
 
       {/* Main Content */}
-      <div style={styles.content}>
-        {/* About Us Section */}
-        <h2 style={{ ...styles.title, marginTop: "0px" }}>About Us</h2>
-        <p style={{ ...styles.text, marginTop: "20px" }}>
-          This project is developed by 3rd sem MCA students under the guidance
-          of
-          <span style={styles.bold}> Seethalakshmi</span>, Assistant Professor.
-        </p>
+      <div style={styles.main}>
+        <div style={styles.badge}>About The Project</div>
+        <h1 style={styles.title}>Meet the minds behind the platform.</h1>
+        
+        {/* Project Guide Section */}
+        <div style={styles.guideCard}>
+          <div style={styles.guideGlow}></div>
+          <div style={styles.guideAvatar}>S</div>
+          <h3 style={styles.guideName}>Seethalakshmi</h3>
+          <p style={styles.guideRole}>Assistant Professor & Project Guide</p>
+          <p style={styles.guideText}>
+            This Staff Leave Hub platform was architected and developed as a comprehensive academic project by 3rd semester MCA students, under expert faculty guidance.
+          </p>
+        </div>
 
         {/* Team Members Section */}
-        <h2 style={{ ...styles.title, marginTop: "40px" }}>
-          OUR TEAM MEMBERS ARE
-        </h2>
-        <div style={styles.teamContainer}>
-          <div style={styles.teamMemberCard}>
-            <p style={styles.teamMember}>Punith A</p>
+        <h2 style={styles.teamTitle}>The Engineering Team</h2>
+        <div style={styles.teamGrid}>
+          
+          {/* Punith A Card */}
+          <div 
+            style={styles.memberCard}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 15px 30px rgba(79, 70, 229, 0.08)';
+              e.currentTarget.style.background = '#FFFFFF';
+              e.currentTarget.style.borderColor = '#C7D2FE';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.background = '#F8FAFC';
+              e.currentTarget.style.borderColor = '#F1F5F9';
+            }}
+          >
+            <div style={{...styles.memberAvatar, background: '#EEF2FF', color: '#4F46E5', boxShadow: '0 5px 15px rgba(79,70,229,0.15)'}}>
+              PA
+            </div>
+            <h3 style={styles.memberName}>Punith A</h3>
+            <p style={styles.memberRole}>3rd Sem MCA Scholar</p>
           </div>
-          <div style={styles.teamMemberCard}>
-            <p style={styles.teamMember}>Pavithra H</p>
+
+          {/* Pavithra H Card */}
+          <div 
+            style={styles.memberCard}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 15px 30px rgba(225, 29, 72, 0.08)';
+              e.currentTarget.style.background = '#FFFFFF';
+              e.currentTarget.style.borderColor = '#FECDD3';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.background = '#F8FAFC';
+              e.currentTarget.style.borderColor = '#F1F5F9';
+            }}
+          >
+            <div style={{...styles.memberAvatar, background: '#FFF1F2', color: '#E11D48', boxShadow: '0 5px 15px rgba(225,29,72,0.15)'}}>
+              PH
+            </div>
+            <h3 style={styles.memberName}>Pavithra H</h3>
+            <p style={styles.memberRole}>3rd Sem MCA Scholar</p>
           </div>
+
         </div>
       </div>
     </div>
@@ -51,100 +105,191 @@ const AboutUs = () => {
 };
 
 const styles = {
-  container: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+  page: {
+    height: '100vh',
+    overflow: 'hidden', // Disables scrolling globally
+    background: '#FFFFFF',
     fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    background: "linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%)",
-    paddingTop: "80px",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
-  header: {
-    width: "100%",
-    background: "white",
-    padding: "15px 40px",
-    position: "fixed",
+  navbar: {
+    width: '100%',
+    height: '80px',
+    background: 'rgba(255, 255, 255, 0.85)',
+    backdropFilter: 'blur(12px)',
+    borderBottom: '1px solid rgba(0,0,0,0.05)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0 40px',
+    position: 'fixed',
     top: 0,
-    left: 0,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    zIndex: 1000,
-    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-    boxSizing: "border-box",
+    zIndex: 100,
+    boxSizing: 'border-box'
   },
-  headerTitle: {
-    fontSize: "1.5rem",
-    fontWeight: "700",
-    color: "#1e293b",
-    background: "linear-gradient(to right, #3b82f6, #2563eb)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
+  brand: {
+    fontSize: '1.25rem',
+    fontWeight: '800',
+    color: '#0F172A',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
   },
-  backButton: {
-    padding: "8px 16px",
-    fontSize: "0.95rem",
-    cursor: "pointer",
-    border: "1px solid #cbd5e1",
-    backgroundColor: "white",
-    color: "#475569",
-    borderRadius: "8px",
-    transition: "all 0.2s ease",
-    fontWeight: "600",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
+  logoMark: {
+    width: '32px',
+    height: '32px',
+    background: 'linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%)',
+    borderRadius: '8px',
   },
-  backButtonHover: {
-    backgroundColor: "#f8fafc",
-    color: "#1e293b",
-    borderColor: "#94a3b8",
+  backBtn: {
+    background: '#F1F5F9',
+    color: '#0F172A',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '999px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
   },
-  content: {
-    width: "90%",
-    maxWidth: "800px",
-    padding: "50px",
-    borderRadius: "16px",
-    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
-    background: "white",
-    marginTop: "40px",
-    textAlign: "center",
+  main: {
+    marginTop: '80px', 
+    flex: 1,
+    width: '100%',
+    maxWidth: '850px',
+    padding: '30px 20px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center', // Centers everything perfectly vertically
+    textAlign: 'center',
+    boxSizing: 'border-box'
+  },
+  badge: {
+    background: '#F8FAFC',
+    color: '#475569',
+    padding: '6px 16px',
+    borderRadius: '999px',
+    fontSize: '0.8rem',
+    fontWeight: '700',
+    marginBottom: '15px',
+    border: '1px solid #E2E8F0',
+    letterSpacing: '1px',
+    textTransform: 'uppercase'
   },
   title: {
-    fontSize: "1.8rem",
-    fontWeight: "700",
-    marginBottom: "15px",
-    color: "#1e293b",
+    fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
+    fontWeight: '800',
+    color: '#0F172A',
+    lineHeight: '1.1',
+    margin: '0 0 30px 0',
+    letterSpacing: '-0.02em'
   },
-  text: {
-    fontSize: "1.1rem",
-    lineHeight: "1.6",
-    color: "#475569",
+  guideCard: {
+    background: '#FFFFFF',
+    border: '1px solid #E2E8F0',
+    borderRadius: '20px',
+    padding: '30px',
+    width: '100%',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+    marginBottom: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    boxSizing: 'border-box'
   },
-  bold: {
-    fontWeight: "700",
-    color: "#2563eb",
+  guideGlow: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, height: '6px',
+    background: 'linear-gradient(90deg, #10B981, #34D399)'
   },
-  teamContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "20px",
-    marginTop: "20px",
+  guideAvatar: {
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    background: '#ECFDF5',
+    color: '#059669',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '24px',
+    fontWeight: '800',
+    marginBottom: '15px',
+    border: '3px solid #FFFFFF',
+    boxShadow: '0 8px 20px rgba(5, 150, 105, 0.15)'
   },
-  teamMemberCard: {
-    padding: "15px 30px",
-    background: "#f8fafc",
-    borderRadius: "10px",
-    border: "1px solid #e2e8f0",
+  guideName: {
+    fontSize: '1.5rem',
+    fontWeight: '800',
+    color: '#0F172A',
+    margin: '0 0 5px 0'
   },
-  teamMember: {
-    fontSize: "1.2rem",
-    fontWeight: "600",
-    color: "#334155",
+  guideRole: {
+    fontSize: '1rem',
+    color: '#059669',
+    fontWeight: '700',
+    margin: '0 0 10px 0'
+  },
+  guideText: {
+    fontSize: '0.95rem',
+    color: '#475569',
+    lineHeight: '1.5',
     margin: 0,
+    maxWidth: '600px'
   },
+  teamTitle: {
+    fontSize: '1.5rem',
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: '20px'
+  },
+  teamGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '20px',
+    width: '100%'
+  },
+  memberCard: {
+    background: '#F8FAFC',
+    borderRadius: '20px',
+    padding: '25px 20px',
+    border: '2px solid #F1F5F9',
+    transition: 'all 0.3s ease',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    cursor: 'default'
+  },
+  memberAvatar: {
+    width: '70px',
+    height: '70px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '28px',
+    fontWeight: '800',
+    marginBottom: '15px',
+    border: '3px solid #FFFFFF'
+  },
+  memberName: {
+    fontSize: '1.3rem',
+    fontWeight: '800',
+    color: '#0F172A',
+    margin: '0 0 5px 0'
+  },
+  memberRole: {
+    fontSize: '0.9rem',
+    color: '#64748B',
+    fontWeight: '600',
+    margin: 0
+  }
 };
 
 export default AboutUs;

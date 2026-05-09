@@ -67,9 +67,9 @@ const ADashboard = () => {
             { name: "Employees", path: "/EmployeeInfo" },
             { name: "Attendance", path: "/Attendance" },
             { name: "Leave Details", path: "/A_leaveapplications" },
-            { name: "Holidays", path: "/A_holidays" },
+            // { name: "Holidays", path: "/A_holidays" },
             { name: "Leave Status", path: "/A_leavestatus" },
-            { name: "Logged Employees", path: "/Staffloggeed" }
+            // { name: "Logged Employees", path: "/Staffloggeed" }
           ].map((item) => (
             <div 
               key={item.name}

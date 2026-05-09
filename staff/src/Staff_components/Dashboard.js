@@ -69,7 +69,7 @@ const LeaveHub = () => {
             { name: 'Profile', path: '/Profile' },
             { name: 'Leave Request', path:'/Leave_request' },
             { name: 'Leave Status', path: '/Leavestatus' },
-            { name: 'Holidays', path: '/Staffholidays' },
+            // { name: 'Holidays', path: '/Staffholidays' },
             { name: 'Leave History', path: '/Leavehystory' }
           ].map((item) => (
             <div 
