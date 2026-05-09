@@ -569,30 +569,85 @@ app.post('/api/employee', async (req, res) => {
 });
 // API to handle validate staff login
 
-app.post('/api/login', (req, res) => {
-  const { employee_id, password } = req.body;
+app.post('/api/login', async (req, res) => {
 
-  const query = 'SELECT * FROM s_signup WHERE employee_id = ? AND password = ?';
-  db.query(query, [employee_id, password], (err, results) => {
-    if (err) {
-      console.error('Error executing query:', err);
-      return res.status(500).json({ success: false, message: 'Database error' });
+  try {
+
+    const { employee_id, password } = req.body;
+
+    console.log("Login request:", employee_id);
+
+    // Validation
+    if (!employee_id || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee ID and password required"
+      });
     }
 
-    if (results.length > 0) {
-      // Store user ID in session
-      req.session.userId = employee_id;
-      return res.json({ 
+    // SQL query
+    const query = `
+      SELECT * FROM s_signup
+      WHERE employee_id = ? AND password = ?
+    `;
+
+    // MYSQL2/PROMISE STYLE
+    const [results] = await db.query(
+      query,
+      [employee_id, password]
+    );
+
+    console.log("Login results:", results);
+
+    // Invalid login
+    if (results.length === 0) {
+
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+      });
+
+    }
+
+    // Save session
+    req.session.userId = employee_id;
+
+    // SAVE SESSION FIRST
+    req.session.save((err) => {
+
+      if (err) {
+
+        console.error("Session save error:", err);
+
+        return res.status(500).json({
+          success: false,
+          message: "Session save failed"
+        });
+
+      }
+
+      console.log("Session saved successfully");
+
+      return res.status(200).json({
         success: true,
-        employee_id: employee_id
+        message: "Login successful",
+        employee_id
       });
-    } else {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Invalid credentials' 
-      });
-    }
-  });
+
+    });
+
+  } catch (error) {
+
+    console.error("LOGIN API ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
 });
 
 // Logout endpoint
