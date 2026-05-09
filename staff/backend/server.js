@@ -1698,63 +1698,92 @@ app.post('/api/leave-requests', upload.single('leave_letter'), (req, res) => {
 
 // API endpoint to get leaves by employee_id
 
-app.get('/api/employee/leaves', (req, res) => {
-  // Check session
-  if (!req.session.userId) {
-    return res.status(401).json({ 
-      success: false, 
-      message: 'Unauthorized - Please login first' 
-    });
-  }
+app.get('/api/employee/leaves', async (req, res) => {
 
-  const employeeId = req.session.userId;
+  try {
 
-  const query = `
-    SELECT 
-      id,
-      employee_id, 
-      name, 
-      department, 
-      designation, 
-      leave_type, 
-      DATE_FORMAT(start_date, '%Y-%m-%d') as start_date,
-      DATE_FORMAT(end_date, '%Y-%m-%d') as end_date, 
-      reason, 
-      leave_letter,
-      status
-    FROM leave_request 
-    WHERE employee_id = ?
-    ORDER BY start_date DESC
-  `;
+    console.log("EMPLOYEE LEAVES API CALLED");
 
-  db.query(query, [employeeId], (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ 
+    // Check session
+    if (!req.session.userId) {
+
+      console.log("NO SESSION USER");
+
+      return res.status(401).json({
         success: false,
-        message: 'Failed to fetch leave records',
-        error: err.message 
+        message: 'Unauthorized - Please login first'
       });
+
     }
 
-    // Calculate duration for each leave
-    const leavesWithDuration = results.map(leave => {
+    const employeeId = req.session.userId;
+
+    console.log("EMPLOYEE ID:", employeeId);
+
+    const query = `
+      SELECT 
+        id,
+        employee_id,
+        name,
+        department,
+        designation,
+        leave_type,
+        DATE_FORMAT(start_date, '%Y-%m-%d') as start_date,
+        DATE_FORMAT(end_date, '%Y-%m-%d') as end_date,
+        reason,
+        leave_letter,
+        status
+      FROM leave_request
+      WHERE employee_id = ?
+      ORDER BY start_date DESC
+    `;
+
+    const [results] = await db.query(
+      query,
+      [employeeId]
+    );
+
+    console.log("DATABASE RESULTS:", results);
+
+    const leavesWithDuration = results.map((leave) => {
+
       const start = new Date(leave.start_date);
+
       const end = new Date(leave.end_date);
-      const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-      
+
+      const duration =
+        Math.ceil(
+          (end - start) /
+          (1000 * 60 * 60 * 24)
+        ) + 1;
+
       return {
         ...leave,
         duration: `${duration} day${duration > 1 ? 's' : ''}`
       };
+
     });
 
-    res.json({
+    console.log("FINAL RESPONSE SENT");
+
+    return res.status(200).json({
       success: true,
       data: leavesWithDuration,
       count: leavesWithDuration.length
     });
-  });
+
+  } catch (error) {
+
+    console.error("EMPLOYEE LEAVES ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
 });
 
 // API for ADashboard 
