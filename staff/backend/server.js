@@ -24,6 +24,13 @@ app.options("*", cors({
   origin: "https://staff-leave-hub-jlpw.vercel.app",
   credentials: true
 }));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
+// Session middleware
 // Session middleware
 app.use(session({
   secret: "your_secret_key",
@@ -32,6 +39,7 @@ app.use(session({
   cookie: {
   secure: true,
   sameSite: "none",
+  httpOnly: true,
   maxAge: 24 * 60 * 60 * 1000
 }
 }));
