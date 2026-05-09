@@ -751,65 +751,98 @@ app.get('/api/profile', requireAuth, (req, res) => {
   });
 });
 
-// API to handle leave request submission
-app.post("/api/leave-request", upload.single("leave_letter"), (req, res) => {
-  const {
-    employee_id,
-    name,
-    department,
-    designation,
-    leave_type,
-    start_date,
-    end_date,
-    reason
-  } = req.body;
+app.post("/api/leave-request", upload.single("leave_letter"), async (req, res) => {
 
-  const leave_letter = req.file ? req.file.path : null;
+  try {
 
-  // Basic validation
-  if (!employee_id || !name || !department || !designation || 
-      !leave_type || !start_date || !end_date || !reason) {
-    return res.status(400).json({ message: "All required fields must be filled" });
-  }
+    const {
+      employee_id,
+      name,
+      department,
+      designation,
+      leave_type,
+      start_date,
+      end_date,
+      reason
+    } = req.body;
 
-  // First check if user has available leaves
-  const checkLeavesQuery = `
-    SELECT 
-      (SELECT COUNT(*) FROM leave_request WHERE employee_id = ? AND status = 'Approved') as approvedLeaves,
-      (SELECT doj FROM personal_information WHERE employee_id = ?) as doj
-  `;
+    const leave_letter = req.file ? req.file.path : null;
 
-  db.query(checkLeavesQuery, [employee_id, employee_id], (err, result) => {
-    if (err) {
-      console.error("Error checking leave balance:", err);
-      return res.status(500).json({ message: "Error checking leave balance" });
+    // Validation
+    if (
+      !employee_id ||
+      !name ||
+      !department ||
+      !designation ||
+      !leave_type ||
+      !start_date ||
+      !end_date ||
+      !reason
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All required fields must be filled"
+      });
     }
 
-    if (result.length === 0) {
-      return res.status(404).json({ message: "Employee not found" });
+    // Get DOJ
+    const [employeeRows] = await db.query(
+      `SELECT doj FROM personal_information WHERE employee_id = ? LIMIT 1`,
+      [employee_id]
+    );
+
+    if (employeeRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found"
+      });
     }
 
-    const approvedLeaves = result[0].approvedLeaves || 0;
-    const dateOfJoining = new Date(result[0].doj);
+    const dateOfJoining = new Date(employeeRows[0].doj);
     const today = new Date();
-    const monthsDiff = (today.getFullYear() - dateOfJoining.getFullYear()) * 12 + 
-                      (today.getMonth() - dateOfJoining.getMonth());
+
+    const monthsDiff =
+      (today.getFullYear() - dateOfJoining.getFullYear()) * 12 +
+      (today.getMonth() - dateOfJoining.getMonth());
+
     const totalLeaves = monthsDiff >= 6 ? 20 : 10;
-    
+
+    // Count approved leaves
+    const [leaveRows] = await db.query(
+      `SELECT COUNT(*) as approvedLeaves
+       FROM leave_request
+       WHERE employee_id = ? AND status = 'Approved'`,
+      [employee_id]
+    );
+
+    const approvedLeaves = leaveRows[0].approvedLeaves || 0;
+
     if (approvedLeaves >= totalLeaves) {
-      return res.status(400).json({ message: "You have no remaining leaves available" });
+      return res.status(400).json({
+        success: false,
+        message: "No remaining leaves available"
+      });
     }
 
-    // Proceed with leave request submission
-    const insertQuery = `
-      INSERT INTO leave_request (
-        employee_id, name, department, designation, leave_type,
-        start_date, end_date, leave_letter, reason, status, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', NOW())
-    `;
-
-    db.query(
-      insertQuery,
+    // Insert leave request
+    const [insertResult] = await db.query(
+      `
+      INSERT INTO leave_request
+      (
+        employee_id,
+        name,
+        department,
+        designation,
+        leave_type,
+        start_date,
+        end_date,
+        leave_letter,
+        reason,
+        status,
+        created_at
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', NOW())
+      `,
       [
         employee_id,
         name,
@@ -820,18 +853,28 @@ app.post("/api/leave-request", upload.single("leave_letter"), (req, res) => {
         end_date,
         leave_letter,
         reason
-      ],
-      (err, insertResult) => {
-        if (err) {
-          console.error("Error inserting leave request:", err);
-          return res.status(500).json({ message: "Failed to submit leave request", error: err.message });
-        }
-        res.status(201).json({ message: "Leave request submitted successfully", id: insertResult.insertId });
-      }
+      ]
     );
-  });
-});
 
+    return res.status(201).json({
+      success: true,
+      message: "Leave request submitted successfully",
+      id: insertResult.insertId
+    });
+
+  } catch (error) {
+
+    console.error("LEAVE REQUEST ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
+});
 
 // Add this new API endpoint to your backend
 app.get("/api/user-leave-data", (req, res) => {
