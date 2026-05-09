@@ -95,280 +95,335 @@ const Login = () => {
     window.location.href = "/Home"; // Fallback
   };
 
-  // Styles
-  const pageStyle = {
-    margin: "0",
-    padding: "0",
-    fontFamily: "Arial, sans-serif",
-    background: "linear-gradient(to right, #B0E0E6, #87CEEB)",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  };
-
-  const headerStyle = {
-    fontSize: "40px",
-    fontWeight: "bold",
-    marginBottom: "10px",
-    color: "black",
-  };
-
-  const backButtonStyle = {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    padding: "10px 20px",
-    background: "linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%)",
-    border: "none",
-    borderRadius: "25px",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    color: "#00695C",
-    fontWeight: "600",
-    fontSize: "14px",
-    boxShadow: "0 2px 5px rgba(0, 131, 143, 0.2)",
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
-  };
-
-  const backButtonHoverStyle = {
-    background: "linear-gradient(135deg, #B2EBF2 0%, #80DEEA 50%, #4DD0E1 100%)",
-    boxShadow: "0 4px 8px rgba(0, 131, 143, 0.3)",
-    transform: "translateY(-1px)",
-    color: "#004D40",
-  };
-
-  const cardStyle = {
-    background: "white",
-    padding: "40px",
-    borderRadius: "15px",
-    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
-    width: "700px",
-    maxWidth: "90%",
-    textAlign: "center",
-  };
-
-  const inputGroupStyle = {
-    textAlign: "left",
-    marginBottom: "20px",
-    position: "relative",
-  };
-
-  const labelStyle = {
-    fontWeight: "bold",
-    display: "block",
-    marginBottom: "5px",
-  };
-
-  const inputStyle = {
-    width: "100%",
-    padding: "14px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    fontSize: "18px",
-    background: "linear-gradient(to right, #ffffff, #e3f2fd)",
-    color: "#333",
-    outline: "none",
-    transition: "box-shadow 0.3s ease",
-  };
-
-  const inputHoverStyle = {
-    boxShadow: "0 0 8px rgba(0, 0, 255, 0.4)",
-  };
-
-  const buttonStyle = {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    background: "linear-gradient(to right, #0083B0, #00B4DB)",
-    color: "black",
-    fontSize: "20px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    transition: "0.3s",
-    fontWeight: "bold",
-    position: "relative",
-  };
-
-  const buttonHoverStyle = {
-    background: "linear-gradient(to right, #005f73, #0a9396)",
-  };
-
-  const loadingButtonStyle = {
-    ...buttonStyle,
-    cursor: "not-allowed",
-    opacity: 0.8,
-  };
-
-  const eyeIconStyle = {
-    position: "absolute",
-    right: "15px",
-    top: "42px",
-    cursor: "pointer",
-    fontSize: "18px",
-    color: "#555",
-  };
-
-  const errorMessageStyle = {
-    color: "red",
-    marginBottom: "15px",
-    fontSize: "16px",
-  };
-
-  const backendErrorStyle = {
-    color: "#FF8C00",
-    marginBottom: "15px",
-    fontSize: "14px",
-    fontStyle: "italic",
-  };
-
-  const successMessageStyle = {
-    color: "green",
-    marginBottom: "15px",
-    fontSize: "16px",
-  };
-
-  const modalStyle = {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-    textAlign: "center",
-    zIndex: 1000,
-    minWidth: "300px",
-  };
-
-  const overlayStyle = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 999,
-  };
-
-  const loadingSpinnerStyle = {
-    display: "inline-block",
-    width: "20px",
-    height: "20px",
-    border: "3px solid rgba(255,255,255,.3)",
-    borderRadius: "50%",
-    borderTopColor: "#fff",
-    animation: "spin 1s ease-in-out infinite",
-    marginLeft: "10px",
-  };
-
   return (
-    <div style={pageStyle}>
-      <button
-        style={backButtonStyle}
-        onMouseOver={(e) => Object.assign(e.target.style, backButtonHoverStyle)}
-        onMouseOut={(e) => {
-          e.target.style.background = "linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%)";
-          e.target.style.boxShadow = "0 2px 5px rgba(0, 131, 143, 0.2)";
-          e.target.style.transform = "none";
-          e.target.style.color = "#00695C";
-        }}
-        onClick={handleBackClick}
-      >
-        ← Back
-      </button>
-      
-      <h1 style={headerStyle}>Staff Leave Hub</h1>
-      <div style={cardStyle}>
-        <h2>Staff Login </h2>
-        {errorMessage && <div style={errorMessageStyle}>{errorMessage}</div>}
-        {backendErrorDetails && <div style={backendErrorStyle}>{backendErrorDetails}</div>}
-        {successMessage && <div style={successMessageStyle}>{successMessage}</div>}
-        <form onSubmit={handleSubmit}>
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>Employee ID</label>
+    <div style={styles.page}>
+      <header style={styles.headerBar}>
+        <div style={styles.headerTitle}>Staff Leave Hub</div>
+        <button
+          style={styles.backButton}
+          onMouseOver={(e) => Object.assign(e.target.style, styles.backButtonHover)}
+          onMouseOut={(e) => Object.assign(e.target.style, styles.backButton)}
+          onClick={handleBackClick}
+        >
+          ← Back
+        </button>
+      </header>
+
+      <div style={styles.card}>
+        <h2 style={styles.cardTitle}>Staff Login</h2>
+        <p style={styles.cardSubtitle}>Welcome back! Please enter your details.</p>
+        
+        {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
+        {backendErrorDetails && <div style={styles.backendError}>{backendErrorDetails}</div>}
+        {successMessage && <div style={styles.successMessage}>{successMessage}</div>}
+        
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Employee ID</label>
             <input
               type="text"
               placeholder="Enter your employee ID"
-              style={inputStyle}
-              onFocus={(e) => (e.target.style.boxShadow = inputHoverStyle.boxShadow)}
-              onBlur={(e) => (e.target.style.boxShadow = "none")}
+              style={styles.input}
+              onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
+              onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value)}
               required
               disabled={isLoading}
             />
           </div>
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              style={inputStyle}
-              onFocus={(e) => (e.target.style.boxShadow = inputHoverStyle.boxShadow)}
-              onBlur={(e) => (e.target.style.boxShadow = "none")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
-            <span
-              style={eyeIconStyle}
-              onClick={() => setShowPassword(!showPassword)}
-              title={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? "👁️" : "👁️‍🗨️"}
-            </span>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Password</label>
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                style={{...styles.input, paddingRight: "40px"}}
+                onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
+                onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+              <span
+                style={styles.eyeIcon}
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "👁️" : "👁️🗨️"}
+              </span>
+            </div>
           </div>
+
+          <div style={styles.forgotPasswordContainer}>
+            <a href="/Forgotpass" style={styles.link}>Forgot password?</a>
+          </div>
+
           <button
             type="submit"
-            style={isLoading ? loadingButtonStyle : buttonStyle}
-            onMouseOver={(e) => !isLoading && (e.target.style.background = buttonHoverStyle.background)}
-            onMouseOut={(e) => !isLoading && (e.target.style.background = "linear-gradient(to right, #0083B0, #00B4DB)")}
+            style={isLoading ? styles.loadingButton : styles.button}
+            onMouseOver={(e) => !isLoading && (e.target.style.background = styles.buttonHover.background)}
+            onMouseOut={(e) => !isLoading && (e.target.style.background = styles.button.background)}
             disabled={isLoading}
           >
             {isLoading ? (
-              <>
-                Logging in...
-                <span style={loadingSpinnerStyle}></span>
-              </>
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                Logging in... <span className="spinner" style={styles.spinner}></span>
+              </span>
             ) : (
               "Login"
             )}
           </button>
-          <div style={{ marginTop: "15px", fontSize: "16px" }}>
-            <a href="/Forgotpass" style={{ color: "#1E90FF", textDecoration: "none" }}>Forgot password?</a>
-          </div>
-          <div style={{ marginTop: "10px", fontSize: "16px" }}>
+          
+          <div style={styles.signupContainer}>
             <span>Don't have an account? </span>
-            <a href="/Signup" style={{ color: "#1E90FF", textDecoration: "none" }}>Sign up</a>
+            <a href="/Signup" style={styles.linkBold}>Sign up</a>
           </div>
         </form>
       </div>
 
       {showModal && (
         <>
-          <div style={overlayStyle}></div>
-          <div style={modalStyle}>
-            <p>{successMessage}</p>
+          <div style={styles.overlay}></div>
+          <div style={styles.modal}>
+            <div style={styles.modalIcon}>✓</div>
+            <p style={styles.modalText}>{successMessage}</p>
           </div>
         </>
       )}
 
       <style>
-        {`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
+        {\`
+          @keyframes spin { to { transform: rotate(360deg); } }
+          .spinner {
+            display: inline-block; width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            border-top-color: #fff; animation: spin 1s ease-in-out infinite;
           }
-        `}
+        \`}
       </style>
     </div>
   );
+};
+
+const styles = {
+  page: {
+    margin: "0",
+    padding: "0",
+    fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    background: "linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%)",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  headerBar: {
+    width: "100%",
+    background: "white",
+    padding: "15px 40px",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+    boxSizing: "border-box",
+  },
+  headerTitle: {
+    fontSize: "1.5rem",
+    fontWeight: "700",
+    background: "linear-gradient(to right, #3b82f6, #2563eb)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  backButton: {
+    padding: "8px 16px",
+    fontSize: "0.95rem",
+    cursor: "pointer",
+    border: "1px solid #cbd5e1",
+    backgroundColor: "white",
+    color: "#475569",
+    borderRadius: "8px",
+    transition: "all 0.2s ease",
+    fontWeight: "600",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+  },
+  backButtonHover: {
+    backgroundColor: "#f8fafc",
+    color: "#1e293b",
+    borderColor: "#94a3b8",
+  },
+  card: {
+    background: "white",
+    padding: "50px 40px",
+    borderRadius: "16px",
+    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
+    width: "420px",
+    maxWidth: "90%",
+    textAlign: "center",
+    marginTop: "60px",
+  },
+  cardTitle: {
+    fontSize: "1.8rem",
+    fontWeight: "700",
+    color: "#1e293b",
+    marginBottom: "8px",
+    marginTop: "0",
+  },
+  cardSubtitle: {
+    color: "#64748b",
+    fontSize: "0.95rem",
+    marginBottom: "30px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+  inputGroup: {
+    textAlign: "left",
+  },
+  label: {
+    fontWeight: "600",
+    fontSize: "0.9rem",
+    color: "#334155",
+    display: "block",
+    marginBottom: "6px",
+  },
+  input: {
+    width: "100%",
+    padding: "12px 16px",
+    border: "1px solid #cbd5e1",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    backgroundColor: "#f8fafc",
+    color: "#1e293b",
+    outline: "none",
+    transition: "all 0.2s ease",
+    boxSizing: "border-box",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: "12px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    cursor: "pointer",
+    fontSize: "1rem",
+    color: "#64748b",
+  },
+  button: {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    background: "linear-gradient(to right, #3b82f6, #2563eb)",
+    color: "white",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "0.2s",
+    fontWeight: "600",
+    marginTop: "8px",
+    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
+  },
+  buttonHover: {
+    background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+  },
+  loadingButton: {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    background: "linear-gradient(to right, #94a3b8, #64748b)",
+    color: "white",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    cursor: "not-allowed",
+    fontWeight: "600",
+    marginTop: "8px",
+  },
+  forgotPasswordContainer: {
+    textAlign: "right",
+    marginTop: "-8px",
+  },
+  link: {
+    color: "#3b82f6",
+    textDecoration: "none",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+  },
+  signupContainer: {
+    marginTop: "16px",
+    fontSize: "0.95rem",
+    color: "#475569",
+  },
+  linkBold: {
+    color: "#2563eb",
+    textDecoration: "none",
+    fontWeight: "600",
+  },
+  errorMessage: {
+    backgroundColor: "#fef2f2",
+    color: "#ef4444",
+    padding: "10px",
+    borderRadius: "6px",
+    marginBottom: "16px",
+    fontSize: "0.9rem",
+    border: "1px solid #fca5a5",
+  },
+  backendError: {
+    color: "#d97706",
+    marginBottom: "16px",
+    fontSize: "0.85rem",
+    fontStyle: "italic",
+  },
+  successMessage: {
+    backgroundColor: "#f0fdf4",
+    color: "#16a34a",
+    padding: "10px",
+    borderRadius: "6px",
+    marginBottom: "16px",
+    fontSize: "0.9rem",
+    border: "1px solid #86efac",
+  },
+  overlay: {
+    position: "fixed",
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: "rgba(15, 23, 42, 0.6)",
+    backdropFilter: "blur(4px)",
+    zIndex: 999,
+  },
+  modal: {
+    position: "fixed",
+    top: "50%", left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "white",
+    padding: "30px",
+    borderRadius: "16px",
+    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    textAlign: "center",
+    zIndex: 1000,
+    minWidth: "320px",
+  },
+  modalIcon: {
+    width: "50px", height: "50px",
+    borderRadius: "25px",
+    background: "#dcfce7",
+    color: "#16a34a",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    fontSize: "24px", fontWeight: "bold",
+    margin: "0 auto 16px auto",
+  },
+  modalText: {
+    margin: 0,
+    fontSize: "1.1rem",
+    fontWeight: "600",
+    color: "#1e293b",
+  }
 };
 
 export default Login;

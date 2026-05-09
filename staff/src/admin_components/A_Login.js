@@ -7,221 +7,122 @@ const A_Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
 
-  try {
-    const response = await axios.post(
-      "https://staffleavehub-production.up.railway.app/login",
-      {
-        email_id: email,
-        password: password,
+    try {
+      const response = await axios.post(
+        "https://staffleavehub-production.up.railway.app/login",
+        {
+          email_id: email,
+          password: password,
+        }
+      );
+
+      if (response.status === 200) {
+        setMessage("Login successful");
+        navigate(response.data.redirect);
+      } else {
+        setMessage("Invalid credentials");
       }
-    );
-
-    console.log("FULL RESPONSE:", response);
-    console.log("RESPONSE DATA:", response.data);
-
-    if (response.status === 200) {
-      alert("Login successful");
-
-      setMessage("Login successful");
-
-      // Navigate using backend response
-      navigate(response.data.redirect);
-
-    } else {
-      setMessage("Invalid credentials");
+    } catch (error) {
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Server error");
+      }
+    } finally {
+      setIsLoading(false);
     }
-
-  } catch (error) {
-    console.error("LOGIN ERROR:", error);
-
-    if (error.response) {
-      console.log("ERROR RESPONSE:", error.response.data);
-
-      setMessage(error.response.data.message);
-    } else {
-      setMessage("Server error");
-    }
-  }
-};
-
-  useEffect(() => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Message:", message);
-  }, [email, password, message]);
+  };
 
   return (
-    <div style={{
-      margin: "0",
-      padding: "0",
-      fontFamily: "Arial, sans-serif",
-      background: "linear-gradient(135deg, #E4EfE9, #93A5CF)",
-      height: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    }}>
-      {/* Back Button - Positioned 35px from top */}
-      <button
-        style={{
-          position: "absolute",
-          top: "35px",
-          right: "25px",
-          padding: "10px 20px",
-          background: "linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%)",
-          border: "1px solid #DEE2E6",
-          borderRadius: "25px",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-          color: "#495057",
-          fontWeight: "600",
-          fontSize: "14px",
-          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-          zIndex: "10",
-          display: "flex",
-          alignItems: "center",
-          gap: "5px",
-        }}
-        onMouseOver={(e) => {
-          e.target.style.background = "linear-gradient(135deg, #E9ECEF 0%, #DEE2E6 100%)";
-          e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
-          e.target.style.color = "#212529";
-          e.target.style.borderColor = "#ADB5BD";
-        }}
-        onMouseOut={(e) => {
-          e.target.style.background = "linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%)";
-          e.target.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.1)";
-          e.target.style.color = "#495057";
-          e.target.style.borderColor = "#DEE2E6";
-        }}
-        onClick={() => navigate("/")}  // Changed to navigate to Home
-      >
-        ← Back
-      </button>
+    <div style={styles.page}>
+      <header style={styles.headerBar}>
+        <div style={styles.headerTitle}>Staff Leave Hub</div>
+        <button
+          style={styles.backButton}
+          onMouseOver={(e) => Object.assign(e.target.style, styles.backButtonHover)}
+          onMouseOut={(e) => Object.assign(e.target.style, styles.backButton)}
+          onClick={() => navigate("/")}
+        >
+          ← Back
+        </button>
+      </header>
 
-      <h1 style={{
-        fontSize: "36px",
-        fontWeight: "bold",
-        color: "black",
-        background: "linear-gradient(135deg, #8e9eab, rgb(168, 178, 178))",
-        width: "100%",
-        textAlign: "center",
-        padding: "20px 0",
-        position: "absolute",
-        top: "0",
-        left: "0",
-      }}>
-        Staff Leave Hub
-      </h1>
-
-      <div style={{
-        background: "linear-gradient(135deg, #E8F5C8, #9FA5D5)",
-        padding: "40px",
-        borderRadius: "15px",
-        boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
-        width: "700px",
-        textAlign: "center",
-        marginTop: "80px",
-      }}>
-        <h2>Staff Login Page</h2>
-        <form onSubmit={handleLogin}>
-          <div style={{ textAlign: "left", marginBottom: "20px", position: "relative" }}>
-            <label style={{ fontWeight: "bold", display: "block", marginBottom: "5px" }}>Email Id</label>
+      <div style={styles.card}>
+        <h2 style={styles.cardTitle}>Admin Login</h2>
+        <p style={styles.cardSubtitle}>Access the administrative dashboard.</p>
+        
+        {message && (
+          <div style={message === "Login successful" ? styles.successMessage : styles.errorMessage}>
+            {message}
+          </div>
+        )}
+        
+        <form onSubmit={handleLogin} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Email ID</label>
             <input
               type="text"
-              placeholder="Enter your Email Id"
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "6px",
-                fontSize: "18px",
-                background: "linear-gradient(to right, #ffffff, #e3f2fd)",
-                color: "#333",
-                outline: "none",
-                border: "1px solid #ccc",
-              }}
+              placeholder="Enter your Email ID"
+              style={styles.input}
+              onFocus={(e) => (e.target.style.borderColor = "#8b5cf6")}
+              onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Password</label>
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                style={{...styles.input, paddingRight: "40px"}}
+                onFocus={(e) => (e.target.style.borderColor = "#8b5cf6")}
+                onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+              <span
+                style={styles.eyeIcon}
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "🔓" : "🔒"}
+              </span>
+            </div>
+          </div>
 
-          <div style={{ textAlign: "left", marginBottom: "20px", position: "relative" }}>
-            <label style={{ fontWeight: "bold", display: "block", marginBottom: "5px" }}>Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "6px",
-                fontSize: "18px",
-                background: "linear-gradient(to right, #ffffff, #e3f2fd)",
-                color: "#333",
-                outline: "none",
-                border: "1px solid #ccc",
-              }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: "15px",
-                top: "42px",
-                cursor: "pointer",
-                fontSize: "18px",
-                color: "#555",
-              }}
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "🔓" : "🔒"}
-            </span>
+          <div style={styles.forgotPasswordContainer}>
+            <a href="/A_Forgotpass" style={styles.link}>Forgot password?</a>
           </div>
 
           <button
             type="submit"
-            style={{
-              width: "60%",
-              padding: "14px",
-              border: "none",
-              background: "linear-gradient(to right, #0083B0, #00B4DB)",
-              color: "white",
-              fontSize: "20px",
-              borderRadius: "6px",
-              cursor: "pointer",
-              transition: "0.3s",
-              fontWeight: "bold",
-            }}
+            style={isLoading ? styles.loadingButton : styles.button}
+            onMouseOver={(e) => !isLoading && (e.target.style.background = styles.buttonHover.background)}
+            onMouseOut={(e) => !isLoading && (e.target.style.background = styles.button.background)}
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? "Logging in..." : "Login"}
           </button>
-
-          {message && (
-            <div style={{ marginTop: "15px", fontSize: "16px", color: "red" }}>
-              {message}
-            </div>
-          )}
-
-          <div style={{ marginTop: "15px", fontSize: "16px" }}>
-            <a href="/A_Forgotpass" style={{ color: "#1E90FF", textDecoration: "none" }}>
-              Forgot password?
-            </a>
-          </div>
-
-          <div style={{ marginTop: "10px", fontSize: "16px" }}>
+          
+          <div style={styles.signupContainer}>
             <span>Don't have an account? </span>
             <span
               onClick={() => navigate("/A_Signup")}
-              style={{ color: "#1E90FF", textDecoration: "none", cursor: "pointer" }}
+              style={{...styles.linkBold, cursor: "pointer"}}
             >
               Sign up
             </span>
@@ -230,6 +131,185 @@ const A_Login = () => {
       </div>
     </div>
   );
+};
+
+const styles = {
+  page: {
+    margin: "0",
+    padding: "0",
+    fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    background: "linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%)",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  headerBar: {
+    width: "100%",
+    background: "white",
+    padding: "15px 40px",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+    boxSizing: "border-box",
+  },
+  headerTitle: {
+    fontSize: "1.5rem",
+    fontWeight: "700",
+    background: "linear-gradient(to right, #8b5cf6, #6d28d9)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  backButton: {
+    padding: "8px 16px",
+    fontSize: "0.95rem",
+    cursor: "pointer",
+    border: "1px solid #cbd5e1",
+    backgroundColor: "white",
+    color: "#475569",
+    borderRadius: "8px",
+    transition: "all 0.2s ease",
+    fontWeight: "600",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+  },
+  backButtonHover: {
+    backgroundColor: "#f8fafc",
+    color: "#1e293b",
+    borderColor: "#94a3b8",
+  },
+  card: {
+    background: "white",
+    padding: "50px 40px",
+    borderRadius: "16px",
+    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
+    width: "420px",
+    maxWidth: "90%",
+    textAlign: "center",
+    marginTop: "60px",
+  },
+  cardTitle: {
+    fontSize: "1.8rem",
+    fontWeight: "700",
+    color: "#1e293b",
+    marginBottom: "8px",
+    marginTop: "0",
+  },
+  cardSubtitle: {
+    color: "#64748b",
+    fontSize: "0.95rem",
+    marginBottom: "30px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+  inputGroup: {
+    textAlign: "left",
+  },
+  label: {
+    fontWeight: "600",
+    fontSize: "0.9rem",
+    color: "#334155",
+    display: "block",
+    marginBottom: "6px",
+  },
+  input: {
+    width: "100%",
+    padding: "12px 16px",
+    border: "1px solid #cbd5e1",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    backgroundColor: "#f8fafc",
+    color: "#1e293b",
+    outline: "none",
+    transition: "all 0.2s ease",
+    boxSizing: "border-box",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: "12px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    cursor: "pointer",
+    fontSize: "1rem",
+    color: "#64748b",
+  },
+  button: {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    background: "linear-gradient(to right, #8b5cf6, #6d28d9)",
+    color: "white",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "0.2s",
+    fontWeight: "600",
+    marginTop: "8px",
+    boxShadow: "0 4px 12px rgba(139, 92, 246, 0.2)",
+  },
+  buttonHover: {
+    background: "linear-gradient(to right, #7c3aed, #5b21b6)",
+  },
+  loadingButton: {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    background: "linear-gradient(to right, #94a3b8, #64748b)",
+    color: "white",
+    fontSize: "1rem",
+    borderRadius: "8px",
+    cursor: "not-allowed",
+    fontWeight: "600",
+    marginTop: "8px",
+  },
+  forgotPasswordContainer: {
+    textAlign: "right",
+    marginTop: "-8px",
+  },
+  link: {
+    color: "#8b5cf6",
+    textDecoration: "none",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+  },
+  signupContainer: {
+    marginTop: "16px",
+    fontSize: "0.95rem",
+    color: "#475569",
+  },
+  linkBold: {
+    color: "#7c3aed",
+    textDecoration: "none",
+    fontWeight: "600",
+  },
+  errorMessage: {
+    backgroundColor: "#fef2f2",
+    color: "#ef4444",
+    padding: "10px",
+    borderRadius: "6px",
+    marginBottom: "16px",
+    fontSize: "0.9rem",
+    border: "1px solid #fca5a5",
+  },
+  successMessage: {
+    backgroundColor: "#f0fdf4",
+    color: "#16a34a",
+    padding: "10px",
+    borderRadius: "6px",
+    marginBottom: "16px",
+    fontSize: "0.9rem",
+    border: "1px solid #86efac",
+  }
 };
 
 export default A_Login;
