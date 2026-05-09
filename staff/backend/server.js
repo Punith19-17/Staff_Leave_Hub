@@ -488,29 +488,68 @@ app.post("/api/experience", async (req, res) => {
 
 
 // API to handle form submission staff signup
-app.post('/api/employee', (req, res) => {
-  const { employee_id, name, password } = req.body;
+app.post('/api/employee', async (req, res) => {
 
-  // SQL query to insert data into the s_signup table
-  const query = 'INSERT INTO s_signup (employee_id, emp_name, password) VALUES (?, ?, ?)';
-  db.query(query, [employee_id, name, password], (err, result) => {
-    if (err) {
-      console.error('Error executing query:', err);
-      res.status(500).send('Error saving data');
-      return;
+  try {
+
+    console.log("Received employee signup data:", req.body);
+
+    const {
+      employee_id,
+      name,
+      password
+    } = req.body;
+
+    // Validation
+    if (!employee_id || !name || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
     }
-    res.status(200).send('Data saved successfully');
-  });
-});
 
-// Middleware to check if user is authenticated
-const requireAuth = (req, res, next) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' });
+    // SQL query
+    const query = `
+      INSERT INTO s_signup
+      (
+        employee_id,
+        name,
+        password
+      )
+      VALUES (?, ?, ?)
+    `;
+
+    // MYSQL2/PROMISE QUERY
+    const [result] = await db.query(
+      query,
+      [
+        employee_id,
+        name,
+        password
+      ]
+    );
+
+    console.log("Employee signup inserted:", result);
+
+    return res.status(200).json({
+      success: true,
+      message: "Employee registered successfully",
+      insertedId: result.insertId
+    });
+
+  } catch (error) {
+
+    console.error("Employee Signup API Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to save employee data",
+      error: error.message
+    });
+
   }
-  next();
-};
 
+});
 // API to handle validate staff login
 
 app.post('/api/login', (req, res) => {
