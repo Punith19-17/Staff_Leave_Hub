@@ -16,7 +16,7 @@ const LeaveHub = ({ employeeId }) => {
     const fetchLeaves = async () => {
       setLoading(true); setError('');
       try {
-        const response = await axios.get('https://staffleavehub-production.up.railway.app/api/employee/leaves', { withCredentials: true });
+        const response = await axios.get('https://staff-leave-hub.onrender.com/api/employee/leaves', { withCredentials: true });
         if (response.data && response.data.success) {
           setLeaves(response.data.data || []);
         } else {
@@ -118,7 +118,7 @@ const LeaveHub = ({ employeeId }) => {
                         <td style={styles.td}>
                           {leave.leave_letter ? (
                            <a
-  href={`https://staffleavehub-production.up.railway.app/uploads/${leave.leave_letter}`}
+  href={`https://staff-leave-hub.onrender.com/uploads/${leave.leave_letter}`}
   target="_blank"
   rel="noopener noreferrer"
   style={styles.link}

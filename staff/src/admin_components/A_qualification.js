@@ -62,7 +62,7 @@ function TeachingStaff() {
     formDataToSend.append('qualification_documents', formData.qualification_documents);
 
     try {
-      const response = await fetch('https://staffleavehub-production.up.railway.app/submit-qualification', {
+      const response = await fetch('https://staff-leave-hub.onrender.com/submit-qualification', {
         method: 'POST',
         body: formDataToSend,
       });

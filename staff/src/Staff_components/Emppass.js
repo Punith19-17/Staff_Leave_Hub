@@ -19,7 +19,7 @@ function EmployeeForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://staffleavehub-production.up.railway.app/api/employee", {
+      const response = await fetch("https://staff-leave-hub.onrender.com/api/employee", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

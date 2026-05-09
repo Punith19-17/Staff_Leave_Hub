@@ -14,7 +14,7 @@ const ADashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get("https://staffleavehub-production.up.railway.app/api/Adashboard");
+        const response = await axios.get("https://staff-leave-hub.onrender.com/api/Adashboard");
         if (response.data) {
           setDashboardData({
             totalEmployees: response.data.totalEmployees || 0,

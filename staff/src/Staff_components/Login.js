@@ -28,7 +28,7 @@ const Login = () => {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("https://staffleavehub-production.up.railway.app/api/login", {
+      const response = await fetch("https://staff-leave-hub.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ employee_id: employeeId, password }),
@@ -53,7 +53,7 @@ const Login = () => {
             login_time: currentDate.toTimeString().split(' ')[0]
           };
 
-          const recordResponse = await fetch("https://staffleavehub-production.up.railway.app/api/record-login", {
+          const recordResponse = await fetch("https://staff-leave-hub.onrender.com/api/record-login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(loginRecord),

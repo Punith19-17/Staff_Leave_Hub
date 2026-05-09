@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const api = axios.create({
-  baseURL: 'https://staffleavehub-production.up.railway.app',
+  baseURL: 'https://staff-leave-hub.onrender.com',
   timeout: 10000
 });
 

@@ -17,7 +17,7 @@ const LeaveRequest = () => {
       const formDataToSend = new FormData();
       for (const key in formData) { formDataToSend.append(key, formData[key]); }
 
-      const response = await fetch('https://staffleavehub-production.up.railway.app/api/leave-request', {
+      const response = await fetch('https://staff-leave-hub.onrender.com/api/leave-request', {
         method: 'POST', body: formDataToSend, credentials: 'include'
       });
 

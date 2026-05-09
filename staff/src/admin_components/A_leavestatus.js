@@ -12,7 +12,7 @@ const LeaveApplications = () => {
       try {
         setLoading(true);
         
-        const response = await fetch("https://staffleavehub-production.up.railway.app/api/leave-requests", {
+        const response = await fetch("https://staff-leave-hub.onrender.com/api/leave-requests", {
           headers: {
             'Accept': 'application/json'
           }
@@ -54,7 +54,7 @@ const LeaveApplications = () => {
     if (letterPath.startsWith('http://') || letterPath.startsWith('https://')) {
       return letterPath;
     }
-    return `https://staffleavehub-production.up.railway.app/${letterPath.replace(/^\//, '')}`;
+    return `https://staff-leave-hub.onrender.com/${letterPath.replace(/^\//, '')}`;
   };
 
   const handleBackClick = () => {

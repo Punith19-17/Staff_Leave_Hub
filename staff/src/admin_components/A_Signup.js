@@ -8,7 +8,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("https://staffleavehub-production.up.railway.app/signup", {
+    const response = await fetch("https://staff-leave-hub.onrender.com/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),

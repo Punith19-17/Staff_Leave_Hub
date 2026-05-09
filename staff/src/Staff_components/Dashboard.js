@@ -15,7 +15,7 @@ const LeaveHub = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://staffleavehub-production.up.railway.app/api/user-leave-data', {
+        const response = await fetch('https://staff-leave-hub.onrender.com/api/user-leave-data', {
           credentials: 'include'
         });
         

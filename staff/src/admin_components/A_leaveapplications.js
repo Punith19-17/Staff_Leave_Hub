@@ -14,7 +14,7 @@ const [, setLoading] = useState(true);
     const fetchLeaveRequests = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://staffleavehub-production.up.railway.app/api/leave-requests", {
+        const response = await fetch("https://staff-leave-hub.onrender.com/api/leave-requests", {
           headers: { 'Accept': 'application/json' }
         });
         if (!response.ok) throw new Error("Server error");
@@ -36,7 +36,7 @@ const [, setLoading] = useState(true);
 
   const handleStatusUpdate = async () => {
     try {
-      const response = await fetch(`https://staffleavehub-production.up.railway.app/api/leave-requests/${selectedLeave.id}`, {
+      const response = await fetch(`https://staff-leave-hub.onrender.com/api/leave-requests/${selectedLeave.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: status }),
@@ -53,7 +53,7 @@ const [, setLoading] = useState(true);
   };
 
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-  const getLeaveLetterUrl = (path) => path ? (path.startsWith('http') ? path : `https://staffleavehub-production.up.railway.app/${path.replace(/^\//, '')}`) : null;
+  const getLeaveLetterUrl = (path) => path ? (path.startsWith('http') ? path : `https://staff-leave-hub.onrender.com/${path.replace(/^\//, '')}`) : null;
 
   return (
     <div style={styles.container}>

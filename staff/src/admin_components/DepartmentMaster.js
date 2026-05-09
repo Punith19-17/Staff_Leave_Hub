@@ -18,7 +18,7 @@ function DepartmentPage() {
   const fetchDepartments = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("https://staffleavehub-production.up.railway.app/api/departments");
+      const response = await fetch("https://staff-leave-hub.onrender.com/api/departments");
       if (!response.ok) {
         throw new Error("Failed to fetch departments");
       }
@@ -42,7 +42,7 @@ function DepartmentPage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("https://staffleavehub-production.up.railway.app/api/departments", {
+      const response = await fetch("https://staff-leave-hub.onrender.com/api/departments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

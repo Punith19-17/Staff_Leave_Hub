@@ -33,7 +33,7 @@ const HolidayCalendar = () => {
       params.append('month', formData.month);
       params.append('year', formData.year);
 
-      const response = await axios.get(`https://staffleavehub-production.up.railway.app/api/holidays?${params.toString()}`);
+      const response = await axios.get(`https://staff-leave-hub.onrender.com/api/holidays?${params.toString()}`);
       
       if (response.data.success) {
         setHolidayData(response.data.data);
@@ -141,7 +141,7 @@ const HolidayCalendar = () => {
               {holidayData.imageUrl ? (
                 <div className="holiday-image-container">
                   <img 
-                    src={`https://staffleavehub-production.up.railway.app${holidayData.imageUrl}`}
+                    src={`https://staff-leave-hub.onrender.com${holidayData.imageUrl}`}
                     alt={`Holiday calendar for ${holidayData.month} ${holidayData.year}`}
                     className="holiday-image"
                     onError={(e) => {

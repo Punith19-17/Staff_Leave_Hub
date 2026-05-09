@@ -70,7 +70,7 @@ const HolidayCalendar = () => {
     }
   
     try {
-      const response = await axios.post('https://staffleavehub-production.up.railway.app/api/holidays', formDataToSend, {
+      const response = await axios.post('https://staff-leave-hub.onrender.com/api/holidays', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

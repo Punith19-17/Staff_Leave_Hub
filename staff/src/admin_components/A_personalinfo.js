@@ -38,7 +38,7 @@ function TeachingStaff() {
     }
   
     try {
-      const response = await axios.post("https://staffleavehub-production.up.railway.app/api/personal-information", data, {
+      const response = await axios.post("https://staff-leave-hub.onrender.com/api/personal-information", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage(response.data.message);

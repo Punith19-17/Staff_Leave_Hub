@@ -9,7 +9,7 @@ const StaffLeaveHub = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://staffleavehub-production.up.railway.app/api/profile', {
+        const response = await fetch('https://staff-leave-hub.onrender.com/api/profile', {
           credentials: 'include',
         });
         if (response.status === 401) { navigate('/login'); return; }
@@ -30,7 +30,7 @@ const StaffLeaveHub = () => {
 
   const formattedDOB = userData.dob ? new Date(userData.dob).toDateString() : '';
 const profileImageUrl = userData.profile_picture
-  ? `https://staffleavehub-production.up.railway.app/${userData.profile_picture}`
+  ? `https://staff-leave-hub.onrender.com/${userData.profile_picture}`
   : 'https://via.placeholder.com/150';
 
   return (
