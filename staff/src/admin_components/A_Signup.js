@@ -5,18 +5,50 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const response = await fetch("https://staff-leave-hub.onrender.com/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    });
+  try {
+
+    const response = await fetch(
+      "https://staff-leave-hub.onrender.com/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password
+        })
+      }
+    );
 
     const data = await response.json();
-    alert(data.message);
-  };
+
+    if (response.ok) {
+
+      alert(data.message);
+
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
+    } else {
+
+      alert(data.message || "Signup failed");
+
+    }
+
+  } catch (error) {
+
+    console.error("SIGNUP ERROR:", error);
+
+    alert("Server error");
+
+  }
+};
 
   return (
     <>

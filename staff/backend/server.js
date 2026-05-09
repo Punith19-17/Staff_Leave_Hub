@@ -538,68 +538,55 @@ app.post("/api/experience", async (req, res) => {
 
 
 // API to handle form submission staff signup
-app.post('/api/employee', async (req, res) => {
+
+app.post("/signup", async (req, res) => {
 
   try {
 
-    console.log("Received employee signup data:", req.body);
-
-    const {
-      employee_id,
-      name,
-      password
-    } = req.body;
+    const { username, email, password } = req.body;
 
     // Validation
-    if (!employee_id || !name || !password) {
+    if (!username || !email || !password) {
+
       return res.status(400).json({
-        success: false,
-        message: "All fields are required"
+        message: "Username, email and password are required"
       });
+
     }
 
-    // SQL query
-    const query = `
-      INSERT INTO s_signup
-      (
-        employee_id,
-        name,
-        password
-      )
+    const sql = `
+      INSERT INTO a_signup
+      (user_name, email_id, password)
       VALUES (?, ?, ?)
     `;
 
-    // MYSQL2/PROMISE QUERY
     const [result] = await db.query(
-      query,
-      [
-        employee_id,
-        name,
-        password
-      ]
+      sql,
+      [username, email, password]
     );
 
-    console.log("Employee signup inserted:", result);
+    console.log("Signup inserted:", result);
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
-      message: "Employee registered successfully",
-      insertedId: result.insertId
+      message: "User registered successfully"
     });
 
   } catch (error) {
 
-    console.error("Employee Signup API Error:", error);
+    console.error("SIGNUP API ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to save employee data",
+      message: "Server error",
       error: error.message
     });
 
   }
 
 });
+
+
 // API to handle validate staff login
 
 app.post('/api/login', async (req, res) => {
