@@ -1454,51 +1454,50 @@ const [results] = await db.query(sql, params);
 // Leave Application Endpoints (add to your existing server.js)
 
 // Get all leave requests
-app.get('/api/leave-requests', (req, res) => {
-  // First set content-type header
-  res.setHeader('Content-Type', 'application/json');
-  
-  const sql = `
-    SELECT 
-      id,
-      employee_id, 
-      name, 
-      department, 
-      designation, 
-      leave_type, 
-      DATE_FORMAT(start_date, '%Y-%m-%d') as start_date,
-      DATE_FORMAT(end_date, '%Y-%m-%d') as end_date, 
-      reason, 
-      leave_letter,
-      status
-    FROM leave_request
-    ORDER BY start_date DESC
-  `;
-  
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching leave requests:', err);
-      return res.status(500).json({ 
-        success: false,
-        error: 'Database error',
-        message: err.message
-      });
-    }
-    
-    // Ensure we're sending proper JSON
-    try {
-      res.json({
-        success: true,
-        data: results
-      });
-    } catch (jsonError) {
-      console.error('JSON serialization error:', jsonError);
-      res.status(500).json({
-        success: false,
-        error: 'Response serialization failed'
-      });
-    }
-  });
+app.get('/api/leave-requests', async (req, res) => {
+
+  try {
+
+    console.log("FETCHING ALL LEAVE REQUESTS");
+
+    const sql = `
+      SELECT 
+        id,
+        employee_id,
+        name,
+        department,
+        designation,
+        leave_type,
+        DATE_FORMAT(start_date, '%Y-%m-%d') as start_date,
+        DATE_FORMAT(end_date, '%Y-%m-%d') as end_date,
+        reason,
+        leave_letter,
+        status
+      FROM leave_request
+      ORDER BY start_date DESC
+    `;
+
+    const [results] = await db.query(sql);
+
+    console.log("LEAVE REQUEST RESULTS:", results);
+
+    return res.status(200).json({
+      success: true,
+      data: results
+    });
+
+  } catch (error) {
+
+    console.error("LEAVE REQUEST FETCH ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+
 });
 
 // Get single leave request by ID
