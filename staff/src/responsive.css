@@ -1,37 +1,43 @@
 /* =========================================
    COMPLETE MOBILE RESPONSIVE FIX
-   Staff Leave Hub
+   Staff Leave Hub - Improved Version
+   Apply at: src/responsive.css
+   Import in: src/index.js or src/App.js
+   Usage: import './responsive.css';
 ========================================= */
 
+/* =========================================
+   STEP 1: Global Box Sizing (applies always)
+========================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   MOBILE BREAKPOINT: max-width 768px
+========================================= */
 @media screen and (max-width: 768px) {
 
   /* =========================================
-     GLOBAL RESET
+     BASE HTML
   ========================================= */
-
-  * {
-    box-sizing: border-box !important;
-  }
-
   html,
   body {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 14px !important;
-    scroll-behavior: smooth;
-  }
-
-  body {
-    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
   }
 
   /* =========================================
-     GLOBAL CONTAINERS
+     SAFE OVERFLOW CONTROL
+     (Only apply to known layout wrappers,
+      NOT to all divs — that breaks things)
   ========================================= */
-
   .container,
   .wrapper,
   .content,
@@ -43,134 +49,129 @@
   .admin-container,
   .staff-container,
   .content-area,
-  .page-content {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-    padding: 12px !important;
-    overflow-x: hidden !important;
+  .page-content,
+  .dashboard-layout,
+  .dashboard-page,
+  .staff-page,
+  .leave-page {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 12px;
+    overflow-x: hidden;
   }
 
   /* =========================================
      NAVBAR / HEADER
   ========================================= */
-
   .navbar,
   .topbar,
   header,
   .header {
-    width: 100% !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    gap: 12px !important;
-
-    padding: 12px !important;
-
-    overflow-x: hidden !important;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
   }
 
   .logo,
-  .brand,
-  .title {
-    width: 100% !important;
-
-    text-align: center !important;
-
-    font-size: 20px !important;
-    line-height: 1.3 !important;
-
-    word-break: break-word !important;
+  .brand {
+    font-size: 20px;
+    text-align: center;
+    word-break: break-word;
   }
 
   /* =========================================
-     NAV MENU
+     NAV LINKS
   ========================================= */
-
   .nav-links,
   .menu,
   .nav-menu {
-    width: 100% !important;
-
-    display: flex !important;
-    flex-wrap: wrap !important;
-
-    justify-content: center !important;
-    align-items: center !important;
-
-    gap: 10px !important;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
   }
 
   /* =========================================
      BUTTONS
+     FIX: Only make SPECIFIC buttons full-width.
+     Do NOT set width: 100% on ALL buttons —
+     that breaks icon buttons and small actions.
   ========================================= */
 
-  button,
-  .btn,
-  .nav-btn,
+  /* Primary action buttons (login, submit, etc.) */
+  .btn-primary,
   .login-btn,
-  .back-btn {
-    width: 100% !important;
-    max-width: 320px !important;
+  .submit-btn,
+  .apply-btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 48px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 6px auto;
+    display: block;
+  }
 
-    min-height: 48px !important;
+  /* Navigation buttons — keep auto width */
+  .nav-btn,
+  .back-btn,
+  .icon-btn {
+    width: auto;
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
 
-    padding: 12px !important;
+  /* =========================================
+     HEADINGS
+     FIX: Center headings only in hero/banner.
+     Do NOT center ALL h1/h2/h3 globally —
+     it breaks card titles, table headers, etc.
+  ========================================= */
+  .hero h1,
+  .banner h1,
+  .hero-section h1 {
+    font-size: 28px;
+    line-height: 1.25;
+    text-align: center;
+  }
 
-    font-size: 16px !important;
+  .hero h2,
+  .banner h2 {
+    font-size: 22px;
+    text-align: center;
+  }
 
-    border-radius: 12px !important;
-
-    margin: 6px auto !important;
-
-    display: block !important;
+  .hero p,
+  .banner p {
+    font-size: 15px;
+    line-height: 1.7;
+    text-align: center;
   }
 
   /* =========================================
      HERO SECTION
   ========================================= */
-
   .hero,
   .hero-section,
   .banner {
-    width: 100% !important;
-
-    padding: 30px 15px !important;
-
-    text-align: center !important;
-  }
-
-  h1,
-  .hero h1 {
-    font-size: 32px !important;
-    line-height: 1.2 !important;
-    text-align: center !important;
-  }
-
-  h2 {
-    font-size: 26px !important;
-    text-align: center !important;
-  }
-
-  h3 {
-    font-size: 20px !important;
-    text-align: center !important;
-  }
-
-  p,
-  .hero p {
-    font-size: 16px !important;
-    line-height: 1.7 !important;
-    text-align: center !important;
+    width: 100%;
+    padding: 30px 16px;
+    text-align: center;
   }
 
   /* =========================================
      CARDS
   ========================================= */
-
   .card,
   .dashboard-card,
   .stats-card,
@@ -178,173 +179,213 @@
   .login-card,
   .signup-card,
   .leave-card {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    padding: 18px !important;
-
-    margin: 15px auto !important;
-
-    border-radius: 16px !important;
-
-    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100%;
+    padding: 18px;
+    margin: 12px auto;
+    border-radius: 16px;
   }
 
   /* =========================================
-     FLEX & GRID FIX
+     FLEX & GRID — STACK ON MOBILE
   ========================================= */
-
   .row,
-  .grid,
-  .flex,
   .dashboard-row,
   .card-container,
   .cards-wrapper,
   .stats-container {
-    width: 100% !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-
-    gap: 18px !important;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   /* =========================================
-     SIDEBAR FIX
+     SIDEBAR
+     FIX: Use display:none or collapsible
+     instead of position:relative which
+     can break the layout.
   ========================================= */
-
   .sidebar,
   .dashboard-sidebar,
   .admin-sidebar,
-  aside {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    position: relative !important;
-
-    left: 0 !important;
-    top: 0 !important;
-
-    height: auto !important;
-
-    padding: 15px !important;
-
-    border-right: none !important;
-
-    overflow-x: hidden !important;
+  aside.sidebar {
+    width: 100%;
+    position: static;        /* safer than 'relative' for most layouts */
+    height: auto;
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
   }
-
-  /* SIDEBAR MENU */
 
   .sidebar ul,
   .sidebar-menu,
   .menu-list {
-    width: 100% !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-
-    gap: 12px !important;
-
-    padding: 0 !important;
-    margin: 0 !important;
-
-    list-style: none !important;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;          /* horizontal scroll-like row on small screens */
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   .sidebar li,
   .sidebar a {
-    width: 100% !important;
+    flex: 1 1 auto;
+    min-width: 80px;
+    text-align: center;
   }
 
   /* =========================================
      FORMS
   ========================================= */
-
   form,
   .form-container {
-    width: 100% !important;
+    width: 100%;
   }
 
-  input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[type="number"],
   textarea,
   select {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    padding: 14px !important;
-
-    font-size: 16px !important;
-
-    border-radius: 10px !important;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;          /* prevents iOS zoom on focus */
+    border-radius: 10px;
   }
 
   label {
-    font-size: 15px !important;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
   }
 
   /* =========================================
-     TABLE FIX
+     TABLE — HORIZONTAL SCROLL
   ========================================= */
 
+  /* Wrap tables in a div.table-wrapper for best results */
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+  }
+
   table {
-    width: 100% !important;
-
-    display: block !important;
-
-    overflow-x: auto !important;
-
-    white-space: nowrap !important;
-
-    border-collapse: collapse !important;
+    width: 100%;
+    min-width: 500px;         /* forces scroll before wrapping */
+    border-collapse: collapse;
+    font-size: 13px;
   }
 
   th,
   td {
-    padding: 10px !important;
-    font-size: 14px !important;
+    padding: 10px 12px;
+    white-space: nowrap;      /* prevent ugly wrapping in cells */
+    font-size: 13px;
   }
 
   /* =========================================
-     IMAGE FIX
+     IMAGES
   ========================================= */
-
   img {
-    max-width: 100% !important;
-    height: auto !important;
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
 
+  /* =========================================
+     MODAL FIX
+  ========================================= */
+  .modal,
+  .modal-content,
+  .modal-box {
+    width: 95vw;
+    max-width: 95vw;
+    margin: auto;
+    border-radius: 16px;
+    padding: 20px 16px;
+  }
+
+  /* =========================================
+     UTILITY: Hide on mobile
+  ========================================= */
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* =========================================
+     UTILITY: Show only on mobile
+  ========================================= */
+  .show-on-mobile {
     display: block !important;
-
-    margin: auto !important;
-
-    object-fit: contain !important;
   }
 
-  /* =========================================
-     DASHBOARD CONTENT FIX
-  ========================================= */
+}
 
-  .dashboard-layout,
-  .dashboard-page,
-  .staff-page,
-  .leave-page {
-    width: 100% !important;
+/* =========================================
+   SMALL PHONES: max-width 480px
+========================================= */
+@media screen and (max-width: 480px) {
 
-    padding: 10px !important;
-
-    overflow-x: hidden !important;
+  html {
+    font-size: 13px;
   }
 
-  /* =========================================
-     REMOVE OVERFLOW
-  ========================================= */
+  .card,
+  .dashboard-card,
+  .stats-card,
+  .form-card,
+  .login-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
 
-  div,
-  section,
-  main,
-  aside {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .modal,
+  .modal-content,
+  .modal-box {
+    width: 98vw;
+    padding: 16px 12px;
+  }
+
+}
+
+/* =========================================
+   TABLET: 769px – 1024px
+========================================= */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+  .sidebar,
+  .dashboard-sidebar {
+    width: 220px;
+    min-width: 220px;
+  }
+
+  .stats-container,
+  .cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  table {
+    font-size: 14px;
   }
 
 }
