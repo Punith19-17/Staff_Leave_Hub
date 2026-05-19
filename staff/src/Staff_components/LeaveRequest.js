@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import useIsMobile from './useIsMobile';
 
 const LeaveRequest = () => {
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState({
     employee_id: "", name: "", department: "", designation: "",
     leave_type: "", start_date: "", end_date: "", leave_letter: null, reason: ""
@@ -16,17 +18,12 @@ const LeaveRequest = () => {
     try {
       const formDataToSend = new FormData();
       for (const key in formData) { formDataToSend.append(key, formData[key]); }
-
       const response = await fetch('https://staff-leave-hub.onrender.com/api/leave-request', {
         method: 'POST', body: formDataToSend, credentials: 'include'
       });
-
       if (response.ok) {
         alert('Leave request submitted successfully!');
-        setFormData({
-          employee_id: "", name: "", department: "", designation: "",
-          leave_type: "", start_date: "", end_date: "", leave_letter: null, reason: ""
-        });
+        setFormData({ employee_id: "", name: "", department: "", designation: "", leave_type: "", start_date: "", end_date: "", leave_letter: null, reason: "" });
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message || 'Failed to submit leave request'}`);
@@ -38,18 +35,37 @@ const LeaveRequest = () => {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
-        <h1 style={styles.headerTitle}>Staff Leave Hub</h1>
+
+      {/* Header — Back button LEFT, title CENTERED */}
+      <header style={{ ...styles.header, padding: isMobile ? '14px 16px' : '15px 40px', position: 'relative', flexDirection: 'row' }}>
         <button style={styles.backButton} onClick={() => window.history.back()}>← Back</button>
+        <h1 style={{
+          ...styles.headerTitle,
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: isMobile ? '1.1rem' : '1.5rem',
+          whiteSpace: 'nowrap'
+        }}>
+          Staff Leave Hub
+        </h1>
+        <div style={{ visibility: 'hidden', padding: '8px 16px', whiteSpace: 'nowrap', fontSize: '0.95rem' }}>← Back</div>
       </header>
-      
-      <div style={styles.container}>
-        <div style={styles.formCard}>
-          <h2 style={styles.cardTitle}>Submit Leave Request</h2>
-          <p style={styles.cardSubtitle}>Please fill in the details below to apply for a leave.</p>
+
+      <div style={{ ...styles.container, padding: isMobile ? '16px' : '40px 20px' }}>
+        <div style={{ ...styles.formCard, padding: isMobile ? '24px 16px' : '50px' }}>
+          <h2 style={{ ...styles.cardTitle, fontSize: isMobile ? '1.4rem' : '1.8rem' }}>Submit Leave Request</h2>
+          <p style={{ ...styles.cardSubtitle, marginBottom: isMobile ? '24px' : '40px' }}>
+            Please fill in the details below to apply for a leave.
+          </p>
 
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGrid}>
+            {/* Form Grid — 1 column on mobile, 2 columns on desktop */}
+            <div style={{
+              ...styles.formGrid,
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: isMobile ? '16px' : '25px'
+            }}>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Employee ID</label>
                 <input type="text" name="employee_id" placeholder="Enter ID" style={styles.input} value={formData.employee_id} onChange={handleChange} required />
@@ -98,13 +114,15 @@ const LeaveRequest = () => {
                 <input type="date" name="end_date" style={styles.input} value={formData.end_date} onChange={handleChange} required />
               </div>
             </div>
-            
-            <div style={{...styles.inputGroup, marginBottom: '30px'}}>
+
+            <div style={{ ...styles.inputGroup, marginBottom: '24px', marginTop: isMobile ? '16px' : '0' }}>
               <label style={styles.label}>Reason for Leave (Max 400 words)</label>
-              <textarea name="reason" placeholder="Please provide a clear reason for your leave..." style={styles.textarea} maxLength="2400" value={formData.reason} onChange={handleChange} required />
+              <textarea name="reason" placeholder="Please provide a clear reason for your leave..." style={{ ...styles.textarea, width: '100%' }} maxLength="2400" value={formData.reason} onChange={handleChange} required />
             </div>
-            
-            <button type="submit" style={styles.submitBtn}
+
+            <button
+              type="submit"
+              style={styles.submitBtn}
               onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(37, 99, 235, 0.3)'; }}
               onMouseOut={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.2)'; }}
             >
@@ -119,19 +137,19 @@ const LeaveRequest = () => {
 
 const styles = {
   page: { margin: 0, padding: 0, fontFamily: "'Inter', sans-serif", background: '#f0f4f8', minHeight: '100vh', display: 'flex', flexDirection: 'column' },
-  header: { background: 'white', padding: '15px 40px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  headerTitle: { margin: 0, fontSize: '1.5rem', fontWeight: '800', background: 'linear-gradient(to right, #3b82f6, #2563eb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
-  backButton: { padding: '8px 16px', cursor: 'pointer', border: '1px solid #cbd5e1', backgroundColor: 'white', color: '#475569', borderRadius: '8px', fontWeight: '600' },
-  container: { flex: 1, padding: '40px 20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' },
-  formCard: { background: 'white', borderRadius: '24px', padding: '50px', boxShadow: '0 10px 40px rgba(0,0,0,0.06)', maxWidth: '850px', width: '100%', boxSizing: 'border-box' },
-  cardTitle: { margin: '0 0 10px 0', fontSize: '1.8rem', fontWeight: '800', color: '#1e293b' },
-  cardSubtitle: { margin: '0 0 40px 0', fontSize: '1rem', color: '#64748b' },
-  formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '25px', marginBottom: '25px' },
+  header: { background: 'white', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  headerTitle: { margin: 0, fontWeight: '800', background: 'linear-gradient(to right, #3b82f6, #2563eb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+  backButton: { padding: '8px 16px', cursor: 'pointer', border: '1px solid #cbd5e1', backgroundColor: 'white', color: '#475569', borderRadius: '8px', fontWeight: '600', flexShrink: 0, whiteSpace: 'nowrap' },
+  container: { flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' },
+  formCard: { background: 'white', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.06)', maxWidth: '850px', width: '100%', boxSizing: 'border-box' },
+  cardTitle: { margin: '0 0 10px 0', fontWeight: '800', color: '#1e293b' },
+  cardSubtitle: { fontSize: '1rem', color: '#64748b' },
+  formGrid: { display: 'grid', marginBottom: '20px' },
   inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
   label: { fontSize: '0.9rem', color: '#475569', fontWeight: '700' },
-  input: { padding: '14px 16px', border: '1px solid #cbd5e1', borderRadius: '10px', background: '#f8fafc', color: '#1e293b', fontSize: '1rem', outline: 'none', boxSizing: 'border-box' },
-  fileInput: { padding: '11px 16px', border: '1px dashed #94a3b8', borderRadius: '10px', background: '#f8fafc', color: '#64748b', fontSize: '0.95rem', boxSizing: 'border-box', cursor: 'pointer' },
-  textarea: { padding: '16px', border: '1px solid #cbd5e1', borderRadius: '10px', background: '#f8fafc', color: '#1e293b', fontSize: '1rem', outline: 'none', minHeight: '120px', resize: 'vertical', boxSizing: 'border-box' },
+  input: { width: '100%', padding: '14px 16px', border: '1px solid #cbd5e1', borderRadius: '10px', background: '#f8fafc', color: '#1e293b', fontSize: '16px', outline: 'none', boxSizing: 'border-box' },
+  fileInput: { width: '100%', padding: '11px 16px', border: '1px dashed #94a3b8', borderRadius: '10px', background: '#f8fafc', color: '#64748b', fontSize: '0.95rem', boxSizing: 'border-box', cursor: 'pointer' },
+  textarea: { padding: '16px', border: '1px solid #cbd5e1', borderRadius: '10px', background: '#f8fafc', color: '#1e293b', fontSize: '16px', outline: 'none', minHeight: '120px', resize: 'vertical', boxSizing: 'border-box' },
   submitBtn: { width: '100%', padding: '16px', background: 'linear-gradient(to right, #3b82f6, #2563eb)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)' }
 };
 
